@@ -11,7 +11,7 @@
     "test": "cypress run --browser firefox"
   },
   "dependencies": {
-    "@prisma/client": "^3.13.0",
+    "@prisma/client": "^4.2.1",
     "better-react-mathjax": "^1.0.3",
     "cookie": "^0.5.0",
     "crypto-js": "^4.1.1",
@@ -28,7 +28,7 @@
     "eslint": "8.9.0",
     "eslint-config-next": "12.1.0",
     "postcss": "^8.4.7",
-    "prisma": "^3.12.0",
+    "prisma": "^4.2.1",
     "tailwindcss": "^3.0.23"
   }
 }
