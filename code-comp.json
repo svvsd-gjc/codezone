@@ -2,7 +2,8 @@
     "allow-signups": true,
     "username-len-max": 32,
     "username-len-min": 3,
-    "username-disallow-non-ascii": true,
+    "password-len-max": 32,
+    "password-len-min": 5,
     "difficulty-easy": 2.5,
     "difficulty-medium": 5,
     "difficulty-hard": 7.5
