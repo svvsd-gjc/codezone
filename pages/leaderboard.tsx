@@ -1,3 +1,4 @@
+import React from 'react';
 import { prisma } from "../src/db";
 import Header from '../components/header';
 

@@ -2,6 +2,7 @@ import Head from 'next/head';
 import { prisma } from "../src/db";
 import Header from '../components/header';
 import RedirectButton from '../components/button';
+import React from 'react';
 const config = require("../code-comp.json");
 
 export async function getServerSideProps(ctx) {

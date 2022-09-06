@@ -4,7 +4,7 @@ import { exec, spawn } from "child_process";
 import { prisma } from "../../src/db";
 import removeUploadedFiles from "multer/lib/remove-uploaded-files";
 
-async function completeProblem(problem_id, problem_pts, username) {
+async function completeProblem(problem_id: number, problem_pts: number, username: string) {
 
     // Recalculate the user's points to retain accuracy
     let user = await prisma.account.findUnique({
@@ -65,11 +65,11 @@ async function completeProblem(problem_id, problem_pts, username) {
     return update;
 }
 
-async function checkCase(inputs, output, type, path) {
+async function checkCase(inputs: any, output: any, type: string, path: any) {
     // execute file with exec and feed inputs to it. after it finishes, read the stdout.
     // if the output is correct, return true.
     // if the output is incorrect, return false.
-    let result = await new Promise((resolve, reject) => {
+    let result: string = await new Promise((resolve, reject) => {
         const proc = exec(`python3 ${path}`, {
             timeout: 500, // 1 second
             maxBuffer: 5 * 1024 * 1024, // 5MB
@@ -156,7 +156,7 @@ api.post(async (req, res) =>{
         console.log("[+] Checking case...");
 
         if (!(await checkCase(this_case.inputs, this_case.outputs, this_case.type, req.file.path))) {
-            console.log("[++] " + name + " submitted " + id + " (false)")
+            console.log("[++] " + name + " submitted " + id + " (false)");
             res.redirect(`/problem?p=${id}&ctx=graded_false`);
             break;
         } else {
@@ -168,7 +168,7 @@ api.post(async (req, res) =>{
     // If all of the test cases passed, complete the problem
     if (cases_solved === Object.keys(cases_obj).length) {
         completeProblem(problem.id, problem.points, name);
-        console.log("[++] " + name + " submitted " + id + " (true)")
+        console.log("[++] " + name + " submitted " + id + " (true)");
         res.redirect(`/problem?p=${id}&ctx=graded_true`);
     }
 

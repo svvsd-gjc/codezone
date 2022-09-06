@@ -4,7 +4,6 @@ const config = require("../../code-comp.json");
 
 const api = nc({
     onError: (req, res, err) => {
-        console.log(err.stack);
         res.status(500).json({ statusCode: 500, message: "Uh oh! Something broke. Tell the devs, we'll fix it as soon as we can." });
     },
     onNoMatch: (req, res) => {
@@ -13,8 +12,8 @@ const api = nc({
 });
 
 api.post((req, res) => {
-    let sanitizedName = req.body.username.trim();
-    let sanitizedPass = req.body.password.trim();
+    const sanitizedName = req.body.username.trim();
+    const sanitizedPass = req.body.password.trim();
 
     // Check that the sanitized name fits restrictions applied by the configuration
     if (sanitizedName.length < config["username-len-min"]) {

@@ -3,7 +3,6 @@ import nc from "next-connect";
 
 const api = nc({
     onError: (req, res, err) => {
-        console.log(err.stack);
         res.status(500).json({ statusCode: 500, message: "Uh oh! Something broke. Tell the devs, we'll fix it as soon as we can." });
     },
     onNoMatch: (req, res) => {

@@ -1,5 +1,6 @@
 import RedirectButton from "./button";
 import { useCookies } from "react-cookie";
+import React from "react";
 const config = require("../code-comp.json");
 
 function Header() {

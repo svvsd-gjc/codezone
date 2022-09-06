@@ -1,5 +1,6 @@
+import React from 'react';
 import Header from '../components/header';
-import Submit from "../components/submit"
+import Submit from "../components/submit";
 import { prisma } from "../src/db";
 import { MathJax, MathJaxContext } from 'better-react-mathjax';
 import { useCookies } from "react-cookie";

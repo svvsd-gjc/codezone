@@ -1,5 +1,5 @@
+import React from "react";
 import { useCookies } from "react-cookie";
-import { RedirectButton } from "./button";
 
 function Submit() {
     const [cookie, setCookie] = useCookies(["user"]);
