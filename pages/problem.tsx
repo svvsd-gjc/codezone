@@ -53,22 +53,7 @@ const Problem = ({ problem, id, context}) => {
                 <div className="flex mb-4 pt-4 text-xl">
                     <div className="grow bg-gray-50">
                         <div className="font-extrabold">description</div>
-                        <MathJaxContext config={{
-                            loader: {load: [
-                                "[tex]/cancel",
-                                "[tex]/ams"
-                            ]},
-                            tex: {packages: {
-                                '[+]': [
-                                    "cancel",
-                                    "amsmath",
-                                    "amssymb",
-                                    "amsthm"
-                                ]
-                            }}
-                        }}>
-                            <MathJax>{problem.description}</MathJax>
-                        </MathJaxContext>
+                        {problem.description}
                     </div>
                     <div className="grow bg-gray-100">
                         <div className="font-extrabold">example inputs</div>
