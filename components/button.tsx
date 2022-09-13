@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 
-function RedirectButton({ children, href, className }) {
+function RedirectButton({children, href, className}: {children: any, href?: string, className?: string}) {
     const router = useRouter();
 
     const handleClick = (e) => {
@@ -9,7 +9,7 @@ function RedirectButton({ children, href, className }) {
     };
 
     return (
-        <button className="px-2" href={href} onClick={handleClick}>
+        <button className="px-2" ref={href} onClick={handleClick}>
             <span className={`px-2 rounded transition-all shadow-md bg-blue-400 shadow-cyan-800/50 hover:bg-blue-500 ${className}`}>
                 {children}
             </span>

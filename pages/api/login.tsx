@@ -1,8 +1,9 @@
+import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../src/db";
 import nc from "next-connect";
 
-const api = nc({
-    onError: (req, res, err) => {
+const api = nc<NextApiRequest, NextApiResponse>({
+    onError: (err, req, res, next) => {
         res.status(500).json({ statusCode: 500, message: "Uh oh! Something broke. Tell the devs, we'll fix it as soon as we can." });
     },
     onNoMatch: (req, res) => {

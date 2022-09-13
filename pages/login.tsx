@@ -52,7 +52,7 @@ const Login = () => {
                             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">Login</button>
                         </div>
                     </form>
-                    {config["allow-signups"] ? <RedirectButton href="/signup">Or sign up!</RedirectButton> : <></>}
+                    {config["allow-signups"] ? <RedirectButton href="/signup" className="">Or sign up!</RedirectButton> : <></>}
                 </div>
             </div>
         </>

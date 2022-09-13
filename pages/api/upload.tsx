@@ -1,8 +1,17 @@
+import { NextApiRequest, NextApiResponse } from "next";
 import nc from "next-connect";
 import multer from "multer";
 import { exec, spawn } from "child_process";
 import { prisma } from "../../src/db";
-import removeUploadedFiles from "multer/lib/remove-uploaded-files";
+
+interface File {
+    filename: string,
+    path: string
+}
+
+interface UploadRequest extends NextApiRequest {
+    file: File
+}
 
 async function completeProblem(problem_id: number, problem_pts: number, username: string) {
 
@@ -113,8 +122,8 @@ const upload = multer({
     }
 });
 
-const api = nc({
-    onError: (req, res, err) => {
+const api = nc<UploadRequest, NextApiResponse>({
+    onError: (err, req, res, next) => {
         console.log(err.stack);
         res.statusCode = 500;
         res.statusMessage = "Oops, something went wrong!";
@@ -129,15 +138,16 @@ api.use(upload.single("uploaded_file"));
 
 api.post(async (req, res) =>{
 
-    const id = req.query.p;
-    const name = req.query.u;
+    const id: string = req.query.p as string;
+    const name: string = req.query.u as string;
+    const file = req.file;
 
     console.log(`[+] User "${name}" attempting p${id}`);
 
     // Fetch information from database
     const problem = await prisma.problem.findUnique({
         where: {
-            id: parseInt(req.query.p)
+            id: id
         }
     });
     const user = await prisma.account.findUnique({
@@ -155,7 +165,7 @@ api.post(async (req, res) =>{
         const this_case = cases_obj[case_name];
         console.log("[+] Checking case...");
 
-        if (!(await checkCase(this_case.inputs, this_case.outputs, this_case.type, req.file.path))) {
+        if (!(await checkCase(this_case.inputs, this_case.outputs, this_case.type, file.path))) {
             console.log("[++] " + name + " submitted " + id + " (false)");
             res.redirect(`/problem?p=${id}&ctx=graded_false`);
             break;
