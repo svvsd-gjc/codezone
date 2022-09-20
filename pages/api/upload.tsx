@@ -96,7 +96,7 @@ async function checkCase(inputs: any, output: any, type: string, path: any) {
     // Trim outputs
     result = result.trim();
     // Log and check final result
-    let res;
+    let res: boolean;
     if (type == "number") {
         res = Math.abs(parseFloat(result) - parseFloat(output)) < 0.001;
     } else {
@@ -142,12 +142,13 @@ api.post(async (req, res) =>{
     const name: string = req.query.u as string;
     const file = req.file;
 
+    console.time("validation");
     console.log(`[+] User "${name}" attempting p${id}`);
 
     // Fetch information from database
     const problem = await prisma.problem.findUnique({
         where: {
-            id: id
+            id: parseInt(id)
         }
     });
     const user = await prisma.account.findUnique({
@@ -167,6 +168,7 @@ api.post(async (req, res) =>{
 
         if (!(await checkCase(this_case.inputs, this_case.outputs, this_case.type, file.path))) {
             console.log("[++] " + name + " submitted " + id + " (false)");
+            console.timeEnd("validation");
             res.redirect(`/problem?p=${id}&ctx=graded_false`);
             break;
         } else {
@@ -179,6 +181,7 @@ api.post(async (req, res) =>{
     if (cases_solved === Object.keys(cases_obj).length) {
         completeProblem(problem.id, problem.points, name);
         console.log("[++] " + name + " submitted " + id + " (true)");
+        console.timeEnd("validation");
         res.redirect(`/problem?p=${id}&ctx=graded_true`);
     }
 

@@ -3,7 +3,7 @@ import { prisma } from "../src/db";
 import Header from '../components/header';
 import RedirectButton from '../components/button';
 import React from 'react';
-const config = require("../code-comp.json");
+import config from "../code-comp.json";
 
 export async function getServerSideProps(ctx) {
     // This will load server-side assets like problems, user profiles, and leaderboard
@@ -48,7 +48,7 @@ const Home = ({problems}) => (
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex items-center">
                                                 <div className="ml-4">
-                                                    <RedirectButton href={"/problem/?p=" + problem.id + "&ctx=none"} className="rounded font-bold">{problem.name}</RedirectButton>
+                                                    <RedirectButton href={"/problem/?p=" + problem.id + "&ctx=none"} className="rounded">{problem.name}</RedirectButton>
                                                 </div>
                                             </div>
                                         </td>

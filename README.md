@@ -8,6 +8,9 @@ npx prisma db push
 npm run dev
 ```
 
+This will create a local Prisma database located in `./prisma/data.db`.
+While this local database approach is not the best for scaling, it should be able to handle a few hundred users at a time.
+
 If you'd like to use Docker, you can do the following:
 
 ```bash
