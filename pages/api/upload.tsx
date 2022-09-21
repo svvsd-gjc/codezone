@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import nc from "next-connect";
 import multer from "multer";
-import { exec, spawn } from "child_process";
+import { exec } from "child_process";
 import { prisma } from "../../src/db";
 
 interface File {
@@ -110,15 +110,20 @@ api.post(async (req, res) =>{
     const problem = await prisma.problem.findUnique({
         where: {
             id: parseInt(id)
+        },
+        select: {
+            test_cases: true,
+            id: true,
+            points: true
         }
     });
-    const cases_obj = JSON.parse(problem.test_cases);
+    const cases = JSON.parse(problem.test_cases);
     
     // Test each case
     let cases_solved = 0;
-    for (const case_name in cases_obj) {
+    for (const case_name in cases) {
 
-        const this_case = cases_obj[case_name];
+        const this_case = cases[case_name];
         console.log("[+] Checking case...");
 
         if (!(await checkCase(this_case.inputs, this_case.outputs, this_case.type, file.path))) {
@@ -133,7 +138,7 @@ api.post(async (req, res) =>{
     }
 
     // If all of the test cases passed, complete the problem
-    if (cases_solved === Object.keys(cases_obj).length) {
+    if (cases_solved === Object.keys(cases).length) {
         completeProblem(problem.id, problem.points, name);
         console.log("[++] " + name + " submitted " + id + " (true)");
         console.timeEnd("validation");
