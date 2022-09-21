@@ -16,7 +16,7 @@ api.post((req, res) => {
         where: {
             name: req.body.username
         }
-    }).then((account) => {
+    }).then((account: prisma.account) => {
         if (account.password === req.body.password) {
             res.status(200).json({success: true, name: account.name});
         } else {

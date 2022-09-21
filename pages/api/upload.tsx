@@ -50,9 +50,6 @@ async function checkCase(inputs: any, output: any, type: string, path: string) {
         }
     });
 
-    // Trim outputs
-    result = result.trim();
-
     // Log and check final result
     let res: boolean;
     if (type == "number") {
@@ -73,7 +70,7 @@ const upload = multer({
         fileSize: 10000
     },
     fileFilter: (req, file, cb) => {
-        if (!file.originalname.match(/\.(py|pyc|txt)$/)) {
+        if (!file.originalname.match(/\.(py|txt)$/)) {
             return cb(new Error("Only .py, .pyc and .txt files are allowed!"), false);
         }
         cb(null, true);
@@ -101,8 +98,7 @@ api.post(async (req, res) =>{
     const file = req.file;
 
     console.time("validation");
-    console.log(`[+] User "${name}" attempting p${id}`);
-    console.log(`[+] Got file: ${req.file.filename}`);
+    console.log(`[+] User "${name}" attempting p${id} (${file.filename})`);
 
     // Fetch information from database
     const problem = await prisma.problem.findUnique({

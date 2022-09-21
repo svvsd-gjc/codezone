@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../src/db";
 import nc from "next-connect";
-const config = require("../../code-comp.json");
+import config from "../../code-comp.json";
 
 const api = nc<NextApiRequest, NextApiResponse>({
     onError: (err, req, res, next) => {
