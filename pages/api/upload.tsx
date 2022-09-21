@@ -13,24 +13,16 @@ interface UploadRequest extends NextApiRequest {
     file: File
 }
 
-async function completeProblem(problem_id: number, problem_pts: number, username: string) {
-
-    // Recalculate the user's points to retain accuracy
-    let user = await prisma.account.findUnique({
-        where: {
-            name: username
-        },
-        include: {
-            solved_problems: true
-        }
-    });
-
+async function completeProblem(problem_id: number, problem_points: number, username: string) {
     // Update the database record for the user
-    let update = await prisma.account.update({
+    let update = prisma.account.update({
         where: {
             name: username
         },
         data: {
+            points: {
+              increment: problem_points  
+            },
             solved_problems: {
                 connect: {
                     id: problem_id
@@ -38,43 +30,11 @@ async function completeProblem(problem_id: number, problem_pts: number, username
             }
         }
     });
-
-    console.log("[+] Added problem solve connector");
-
-    // Re-pull the user account
-    user = await prisma.account.findUnique({
-        where: {
-            name: username
-        },
-        include: {
-            solved_problems: true
-        }
-    });
-
-    // Check if problem id is already solved
-    let total_pts = 0;
-    for (let i = 0; i < user.solved_problems.length; i++) {
-        total_pts += user.solved_problems[i].points;
-    }
-
-    // Update user again
-    update = await prisma.account.update({
-        where: {
-            name: username
-        },
-        data: {
-            points: {
-                set: total_pts
-            }
-        }
-    });
-
-    console.log("[+] Recalculated points, resolved to " + total_pts);
-
+    
     return update;
 }
 
-async function checkCase(inputs: any, output: any, type: string, path: any) {
+async function checkCase(inputs: any, output: any, type: string, path: string) {
     // execute file with exec and feed inputs to it. after it finishes, read the stdout.
     // if the output is correct, return true.
     // if the output is incorrect, return false.
@@ -144,6 +104,7 @@ api.post(async (req, res) =>{
 
     console.time("validation");
     console.log(`[+] User "${name}" attempting p${id}`);
+    console.log(`[+] Got file: ${req.file.filename}`);
 
     // Fetch information from database
     const problem = await prisma.problem.findUnique({
@@ -151,15 +112,9 @@ api.post(async (req, res) =>{
             id: parseInt(id)
         }
     });
-    const user = await prisma.account.findUnique({
-        where: {
-            name: name
-        }
-    });
     const cases_obj = JSON.parse(problem.test_cases);
-
-    console.log(`[+] Got file: ${req.file.filename}`);
-
+    
+    // Test each case
     let cases_solved = 0;
     for (const case_name in cases_obj) {
 
