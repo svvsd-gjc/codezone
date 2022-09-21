@@ -43,18 +43,16 @@ async function checkCase(inputs: any, output: any, type: string, path: string) {
             timeout: 500, // 1 second
             maxBuffer: 5 * 1024 * 1024, // 5MB
         }, (err, stdout, stderr) => {
-            if (err) {
                 resolve(stdout);
-            } else {
-                resolve(stdout);
-            }
         });
         for (const input in inputs) {
             proc.stdin.write(inputs[input] + "\n");
         }
     });
+
     // Trim outputs
     result = result.trim();
+
     // Log and check final result
     let res: boolean;
     if (type == "number") {
@@ -120,7 +118,6 @@ api.post(async (req, res) =>{
     const cases = JSON.parse(problem.test_cases);
     
     // Test each case
-    let cases_solved = 0;
     for (const case_name in cases) {
 
         const this_case = cases[case_name];
@@ -131,20 +128,14 @@ api.post(async (req, res) =>{
             console.timeEnd("validation");
             res.redirect(`/problem?p=${id}&ctx=graded_false`);
             break;
-        } else {
-            cases_solved++;
         }
-
     }
 
     // If all of the test cases passed, complete the problem
-    if (cases_solved === Object.keys(cases).length) {
-        completeProblem(problem.id, problem.points, name);
-        console.log("[++] " + name + " submitted " + id + " (true)");
-        console.timeEnd("validation");
-        res.redirect(`/problem?p=${id}&ctx=graded_true`);
-    }
-
+    completeProblem(problem.id, problem.points, name);
+    console.log("[++] " + name + " submitted " + id + " (true)");
+    console.timeEnd("validation");
+    res.redirect(`/problem?p=${id}&ctx=graded_true`);
 });
 
 export default api;
