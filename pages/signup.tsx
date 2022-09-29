@@ -10,8 +10,6 @@ const Signup = () => {
     const handleSignup = async (e) => {
         e.preventDefault();
 
-        console.log(e);
-
         const username = e.target[0].value; 
         const password = sha256(e.target[1].value).toString();
 

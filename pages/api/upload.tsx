@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import nc from "next-connect";
 import multer from "multer";
 import { exec } from "child_process";
-import { prisma } from "../../src/db";
+import { prisma, log } from "../../src/db";
 
 interface File {
     filename: string,
@@ -57,7 +57,7 @@ async function checkCase(inputs: any, output: any, type: string, path: string) {
     } else {
         res = (result === output.join("\n"));
     }
-    console.log("[+] Expected " + output + ", got " + result + ". Resolved to: " + res);
+    log.debug(`Got '${result}', expected '${output}'`);
     return res;
 }
 
@@ -79,7 +79,7 @@ const upload = multer({
 
 const api = nc<UploadRequest, NextApiResponse>({
     onError: (err, req, res, next) => {
-        console.log(err.stack);
+        log.info(err.stack);
         res.statusCode = 500;
         res.statusMessage = "Oops, something went wrong!";
     },
@@ -92,13 +92,11 @@ const api = nc<UploadRequest, NextApiResponse>({
 api.use(upload.single("uploaded_file"));
 
 api.post(async (req, res) =>{
-
     const id: string = req.query.p as string;
     const name: string = req.query.u as string;
     const file = req.file;
 
-    console.time("validation");
-    console.log(`[+] User "${name}" attempting p${id} (${file.filename})`);
+    log.info(`User ${name} attempting problem #${id} ('${file.filename}')`);
 
     // Fetch information from database
     const problem = await prisma.problem.findUnique({
@@ -117,20 +115,18 @@ api.post(async (req, res) =>{
     for (const case_name in cases) {
 
         const this_case = cases[case_name];
-        console.log("[+] Checking case...");
+        log.info(`Checking case '${case_name}'...`);
 
         if (!(await checkCase(this_case.inputs, this_case.outputs, this_case.type, file.path))) {
-            console.log("[++] " + name + " submitted " + id + " (false)");
-            console.timeEnd("validation");
             res.redirect(`/problem?p=${id}&ctx=graded_false`);
+            log.info(`${name} failed problem #${id}`);
             break;
         }
     }
 
     // If all of the test cases passed, complete the problem
     completeProblem(problem.id, problem.points, name);
-    console.log("[++] " + name + " submitted " + id + " (true)");
-    console.timeEnd("validation");
+    log.info(`${name} completed problem #${id}`);
     res.redirect(`/problem?p=${id}&ctx=graded_true`);
 });
 

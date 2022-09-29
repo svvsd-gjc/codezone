@@ -27,7 +27,6 @@ const Problem = ({ problem, id, context}) => {
     const user = cookie.user;
 
     const example_cases = JSON.parse(problem.example_cases);
-    console.log(example_cases);
 
     return (
         <>

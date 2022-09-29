@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { pino } from "pino";
 
 // https://dev.to/iamluisj/how-to-fix-warning-10-prisma-clients-are-already-running-j14
 
@@ -13,4 +14,8 @@ if (process.env.NODE_ENV == "production") {
     prisma = global.prisma;
 }
 
-export { prisma };
+// logger
+
+let log = pino();
+
+export { prisma, log };
