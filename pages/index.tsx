@@ -13,7 +13,7 @@ export async function getServerSideProps(ctx) {
     };
 }
 
-const Home = ({problems}) => (
+const Home = ({ problems }) => (
     <>
 
         {/* Title/favicon */}
@@ -48,7 +48,7 @@ const Home = ({problems}) => (
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex items-center">
                                                 <div className="ml-4">
-                                                    <RedirectButton href={"/problem/?p=" + problem.id + "&ctx=none"} className="rounded">{problem.name}</RedirectButton>
+                                                    <RedirectButton href={"/problem/" + problem.id + "/?ctx=none"} className="rounded">{problem.name}</RedirectButton>
                                                 </div>
                                             </div>
                                         </td>
@@ -61,21 +61,21 @@ const Home = ({problems}) => (
                                             {
                                                 problem.difficulty < config['difficulty-easy'] ?
                                                     <div className="bg-green-100 border border-green-400 text-green-700 px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
-                                                    Easy
+                                                        Easy
                                                     </div>
                                                     :
                                                     problem.difficulty < config['difficulty-medium'] ?
                                                         <div className="bg-orange-100 border border-orange-400 text-orange-700 px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
-                                                        Medium
+                                                            Medium
                                                         </div>
                                                         :
                                                         problem.difficulty < config['difficulty-hard'] ?
                                                             <div className="bg-red-100 border border-red-400 text-red-700 px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
-                                                            Hard
+                                                                Hard
                                                             </div>
                                                             :
                                                             <div className="bg-gray-100 border border-purple-400 text-purple-700 px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
-                                                            Insane
+                                                                Insane
                                                             </div>
 
                                             }

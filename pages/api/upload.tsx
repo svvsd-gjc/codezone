@@ -21,7 +21,7 @@ async function completeProblem(problem_id: number, problem_points: number, usern
         },
         data: {
             points: {
-              increment: problem_points  
+                increment: problem_points
             },
             solved_problems: {
                 connect: {
@@ -30,7 +30,7 @@ async function completeProblem(problem_id: number, problem_points: number, usern
             }
         }
     });
-    
+
     return update;
 }
 
@@ -43,7 +43,7 @@ async function checkCase(inputs: any, output: any, type: string, path: string) {
             timeout: 500, // 1 second
             maxBuffer: 5 * 1024 * 1024, // 5MB
         }, (err, stdout, stderr) => {
-                resolve(stdout);
+            resolve(stdout);
         });
         for (const input in inputs) {
             proc.stdin.write(inputs[input] + "\n");
@@ -91,7 +91,7 @@ const api = nc<UploadRequest, NextApiResponse>({
 
 api.use(upload.single("uploaded_file"));
 
-api.post(async (req, res) =>{
+api.post(async (req, res) => {
     const id: string = req.query.p as string;
     const name: string = req.query.u as string;
     const file = req.file;
@@ -110,7 +110,7 @@ api.post(async (req, res) =>{
         }
     });
     const cases = JSON.parse(problem.test_cases);
-    
+
     // Test each case
     for (const case_name in cases) {
 
@@ -118,7 +118,7 @@ api.post(async (req, res) =>{
         log.info(`Checking case '${case_name}'...`);
 
         if (!(await checkCase(this_case.inputs, this_case.outputs, this_case.type, file.path))) {
-            res.redirect(`/problem?p=${id}&ctx=graded_false`);
+            res.redirect(`/problem/${id}/?ctx=graded_false`);
             log.info(`${name} failed problem #${id}`);
             break;
         }
@@ -127,7 +127,7 @@ api.post(async (req, res) =>{
     // If all of the test cases passed, complete the problem
     completeProblem(problem.id, problem.points, name);
     log.info(`${name} completed problem #${id}`);
-    res.redirect(`/problem?p=${id}&ctx=graded_true`);
+    res.redirect(`/problem/${id}/?ctx=graded_true`);
 });
 
 export default api;
