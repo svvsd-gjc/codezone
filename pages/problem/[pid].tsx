@@ -29,7 +29,6 @@ const Problem = ({ problem, id, context }) => {
 
     return (
         <>
-            <Header />
             <div className="p-3">
                 {problem_info()}
                 {problem_dashboard()}

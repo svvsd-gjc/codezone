@@ -28,9 +28,6 @@ export async function getServerSideProps(ctx) {
 const Leaderboard = ({ team0, team1 }) => (
     <>
 
-        {/* Header bar */}
-        <Header></Header>
-
         {/* Server-loaded problem table */}
 
         <h1 className="p-4 text-xl">Beginner</h1>
@@ -111,4 +108,3 @@ const Leaderboard = ({ team0, team1 }) => (
 );
 
 export default Leaderboard;
-  
