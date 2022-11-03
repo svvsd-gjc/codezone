@@ -120,7 +120,7 @@ api.post(async (req, res) => {
         if (!(await checkCase(this_case.inputs, this_case.outputs, this_case.type, file.path))) {
             res.redirect(`/problem/${id}/?ctx=graded_false`);
             log.info(`${name} failed problem #${id}`);
-            break;
+            return;
         }
     }
 
