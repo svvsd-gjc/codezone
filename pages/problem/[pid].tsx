@@ -9,6 +9,14 @@ export async function getServerSideProps(ctx) {
     const problem = await prisma.problem.findUnique({
         where: {
             id: parseInt(query.pid)
+        },
+        select: {
+            id: true,
+            name: true,
+            description: true,
+            points: true,
+            difficulty: true,
+            example_cases: true,
         }
     });
     return {

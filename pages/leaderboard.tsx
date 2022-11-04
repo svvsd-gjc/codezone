@@ -10,6 +10,10 @@ export async function getServerSideProps(ctx) {
         },
         where: {
             team: 0
+        },
+        select: {
+            name: true,
+            points: true,
         }
     });
     const team1 = await prisma.account.findMany({
@@ -18,6 +22,10 @@ export async function getServerSideProps(ctx) {
         },
         where: {
             team: 1
+        },
+        select: {
+            name: true,
+            points: true,
         }
     });
     return {

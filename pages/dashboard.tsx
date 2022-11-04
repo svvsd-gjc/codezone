@@ -7,7 +7,18 @@ import config from "../code-comp.json";
 
 export async function getServerSideProps(ctx) {
     // This will load server-side assets like problems, user profiles, and leaderboard
-    const problems = await prisma.problem.findMany();
+    const problems = await prisma.problem.findMany({
+        orderBy: {
+            difficulty: 'desc'
+        },
+        select: {
+            id: true,
+            name: true,
+            points: true,
+            difficulty: true,
+            description: true,
+        }
+    });
     return {
         props: { problems }
     };
