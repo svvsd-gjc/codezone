@@ -3,6 +3,7 @@ import nc from "next-connect";
 import multer from "multer";
 import { exec } from "child_process";
 import { prisma, log } from "../../src/db";
+import { PrismaClient } from "@prisma/client";
 
 interface File {
     filename: string,
@@ -14,8 +15,25 @@ interface UploadRequest extends NextApiRequest {
 }
 
 async function completeProblem(problem_id: number, problem_points: number, username: string) {
-    // Update the database record for the user
-    let update = prisma.account.update({
+    // check if the user has already completed this problem
+    let completed = await prisma.account.findUnique({
+        where: {
+            name: username
+        },
+        select: {
+            solved_problems: {
+                select: {
+                    id: true
+                }
+            },
+        }
+    });
+
+    // if the user has already completed this problem, return to avoid duplicate points
+    if (completed.solved_problems.find((problem) => problem.id === problem_id)) return;
+
+    // update the database record for the user
+    await prisma.account.update({
         where: {
             name: username
         },
@@ -30,8 +48,6 @@ async function completeProblem(problem_id: number, problem_points: number, usern
             }
         }
     });
-
-    return update;
 }
 
 async function checkCase(inputs: any, output: any, type: string, path: string) {

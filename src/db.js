@@ -3,6 +3,7 @@ import { pino } from "pino";
 
 // https://dev.to/iamluisj/how-to-fix-warning-10-prisma-clients-are-already-running-j14
 
+/** @type PrismaClient */
 let prisma;
 
 if (process.env.NODE_ENV == "production") {
