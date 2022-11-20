@@ -8,7 +8,7 @@ export async function getServerSideProps(ctx) {
     const query = ctx.query;
     const problem = await prisma.problem.findUnique({
         where: {
-            id: parseInt(query.pid)
+            id: query.pid
         },
         select: {
             id: true,
@@ -33,7 +33,7 @@ const Problem = ({ problem, id, context }) => {
     const [cookie, setCookie] = useCookies(["user"]);
     const user = cookie.user;
 
-    const example_cases = JSON.parse(problem.example_cases);
+    const example_cases = problem.example_cases;
 
     return (
         <>
