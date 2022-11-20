@@ -23,8 +23,8 @@ model Problem {
   description   String
   difficulty    Float    @default(0.0)
   points        Int      @default(0)
-  example_cases String   @default("")
-  test_cases    String   @default("")
-  accountId     String?
+  example_cases Json     @default("{}")
+  test_cases    Json     @default("{}")
+  accountId     String?  @db.ObjectId
   Account       Account? @relation(fields: [accountId], references: [id])
 }
