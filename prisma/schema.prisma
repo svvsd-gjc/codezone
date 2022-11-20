@@ -3,12 +3,12 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./data.db"
+  provider = "mongodb"
+  url      = env("MONGO_URL")
 }
 
 model Account {
-  id              Int       @id @default(autoincrement())
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
   name            String    @unique
   password        String
   organizer       Boolean   @default(false)
@@ -18,13 +18,13 @@ model Account {
 }
 
 model Problem {
-  id            Int      @id @default(autoincrement())
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
   name          String   @unique
   description   String
   difficulty    Float    @default(0.0)
   points        Int      @default(0)
-  example_cases String   @default("")
-  test_cases    String   @default("")
-  accountId     Int?
+  example_cases Json     @default("{}")
+  test_cases    Json     @default("{}")
+  accountId     String?  @db.ObjectId
   Account       Account? @relation(fields: [accountId], references: [id])
 }

@@ -21,4 +21,5 @@ The server will host on https://localhost:3000.
 
 ## Configuring CodeZone/CodeComp
 
-See ```code-comp.json```, all configurable values should be included there.
+See `code-comp.json`, all configurable values should be included there.
+Your `.env` file should also contain the MongoDB URL, with key `MONGO_URL`.
