@@ -3,7 +3,6 @@ import nc from "next-connect";
 import multer from "multer";
 import { exec } from "child_process";
 import { prisma, log } from "../../src/db";
-import { PrismaClient } from "@prisma/client";
 
 interface File {
     filename: string,
@@ -14,7 +13,7 @@ interface UploadRequest extends NextApiRequest {
     file: File
 }
 
-async function completeProblem(problem_id: number, problem_points: number, username: string) {
+async function completeProblem(problem_id: string, problem_points: number, username: string) {
     // check if the user has already completed this problem
     let completed = await prisma.account.findUnique({
         where: {
@@ -117,7 +116,7 @@ api.post(async (req, res) => {
     // Fetch information from database
     const problem = await prisma.problem.findUnique({
         where: {
-            id: parseInt(id)
+            id: id
         },
         select: {
             test_cases: true,
@@ -125,7 +124,7 @@ api.post(async (req, res) => {
             points: true
         }
     });
-    const cases = JSON.parse(problem.test_cases);
+    const cases: any = problem.test_cases;
 
     // Test each case
     for (const case_name in cases) {
