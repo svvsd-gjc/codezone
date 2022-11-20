@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "start-db": "prisma db push",
-    "test": "next dev | cypress run --browser firefox"
+    "test": "next dev | cypress run --browser electron"
   },
   "dependencies": {
     "@prisma/client": "4.2",

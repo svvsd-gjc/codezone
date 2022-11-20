@@ -1,10 +1,10 @@
 
 describe("Home", () => {
     it("should load", () => {
-        cy.visit("localhost:3000");
+        cy.visit("localhost:3000/dashboard");
     });
     it("should render the navbar and table", () => {
-        cy.visit("localhost:3000");
+        cy.visit("localhost:3000/dashboard");
         cy.get("span").contains("CODE_ZONE");
         cy.get("span").contains("leaderboard");
         cy.get("span").contains("problems");
@@ -14,8 +14,8 @@ describe("Home", () => {
         cy.get("th").contains("Points");
     });
     it("should allow the user to naviagate to the leaderboard", () => {
-        cy.visit("localhost:3000");
+        cy.visit("localhost:3000/dashboard");
         cy.get("span").contains("leaderboard").click();
-        cy.url().should("include", "/leaderboard"); 
+        cy.url().should("include", "/leaderboard");
     });
 });
