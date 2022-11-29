@@ -34,7 +34,7 @@ const Profile = ({ data }) => {
             <span className="float-right m-3 px-2 rounded text-4xl font-bold bg-blue-300">team {data.team}</span>
             <span className="float-right m-3 px-2 rounded text-4xl font-bold bg-blue-300">{data.points} point(s)</span>
             {
-                data.organizer ? <span className="float-right m-3 px-2 rounded text-4xl font-bold bg-orange-400 hover:bg-orange-200 transition all">organizer</span> : null
+                data.organizer ? <span className="float-right m-3 px-2 rounded text-4xl font-bold bg-blue-300 transition all">organizer</span> : null
             }
             <br></br>
             {
