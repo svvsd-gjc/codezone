@@ -1,6 +1,7 @@
 import React from 'react';
 import { prisma } from "../src/db";
 import Header from '../components/header';
+import RedirectButton from '../components/button';
 
 export async function getServerSideProps(ctx) {
     // This will load server-side users, ordered by points
@@ -12,6 +13,7 @@ export async function getServerSideProps(ctx) {
             team: 0
         },
         select: {
+            id: true,
             name: true,
             points: true,
         }
@@ -24,6 +26,7 @@ export async function getServerSideProps(ctx) {
             team: 1
         },
         select: {
+            id: true,
             name: true,
             points: true,
         }
@@ -57,9 +60,9 @@ const Leaderboard = ({ team0, team1 }) => (
                                     <tr key={account.id}>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex items-center">
-                                                <div className="ml-4">
+                                                <RedirectButton href={"/profile/" + account.id + "/"} className="ml-4">
                                                     {account.name}
-                                                </div>
+                                                </RedirectButton>
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
