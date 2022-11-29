@@ -19,6 +19,6 @@ const Index = () => {
 
 
     return (<></>); // TODO skeleton loader
-}
+};
 
 export default Index;

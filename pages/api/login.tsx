@@ -16,14 +16,14 @@ api.post((req, res) => {
         where: {
             name: req.body.username
         }
-    }).then((account: prisma.account) => {
+    }).then((account) => {
         if (account.password === req.body.password) {
-            res.status(200).json({success: true, name: account.name});
+            res.status(200).json({ success: true, name: account.name });
         } else {
-            res.status(200).json({success: false, message: "Incorrect password"});
+            res.status(200).json({ success: false, message: "Incorrect password" });
         }
     }).catch((err) => {
-        res.status(500).json({success: false, message: "User not found"});
+        res.status(500).json({ success: false, message: "User not found" });
     });
 });
 

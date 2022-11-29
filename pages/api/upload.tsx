@@ -15,7 +15,7 @@ interface UploadRequest extends NextApiRequest {
 
 async function completeProblem(problem_id: string, problem_points: number, username: string) {
     // check if the user has already completed this problem
-    let completed = await prisma.account.findUnique({
+    const completed = await prisma.account.findUnique({
         where: {
             name: username
         },
@@ -29,7 +29,7 @@ async function completeProblem(problem_id: string, problem_points: number, usern
     });
 
     // if the user has already completed this problem, return to avoid duplicate points
-    if (completed.solved_problems.find((problem) => problem.id === problem_id)) return;
+    if (completed.solved_problems.find((problem) => problem.id === problem_id)) {return;}
 
     // update the database record for the user
     await prisma.account.update({
@@ -53,7 +53,7 @@ async function checkCase(inputs: any, output: any, type: string, path: string) {
     // execute file with exec and feed inputs to it. after it finishes, read the stdout.
     // if the output is correct, return true.
     // if the output is incorrect, return false.
-    let result: string = await new Promise((resolve, reject) => {
+    const result: string = await new Promise((resolve, reject) => {
         const proc = exec(`python3 ${path}`, {
             timeout: 500, // 1 second
             maxBuffer: 5 * 1024 * 1024, // 5MB

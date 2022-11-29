@@ -17,6 +17,6 @@ if (process.env.NODE_ENV == "production") {
 
 // logger
 
-let log = pino();
+const log = pino();
 
 export { prisma, log };
