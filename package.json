@@ -12,11 +12,13 @@
     "test": "next dev | cypress run --browser electron"
   },
   "dependencies": {
+    "@next-auth/prisma-adapter": "^1.0.5",
     "@prisma/client": "4.2",
     "cookie": "0.5",
     "crypto-js": "4.1",
     "multer": "1.4",
     "next": "12.2",
+    "next-auth": "^4.17.0",
     "next-connect": "0.13",
     "pino": "8.6",
     "react": "17.0",
