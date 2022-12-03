@@ -7,8 +7,7 @@ ARG ssh_pub_key
 RUN apt-get update && \
     apt-get install -y \
         git \
-        openssh-server \
-        libmysqlclient-dev
+        openssh-server 
 
 RUN mkdir -p /root/.ssh && \
     chmod 0700 /root/.ssh && \
