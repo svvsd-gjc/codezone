@@ -6,8 +6,7 @@ EXPOSE 3000 5555
 #Install pre-requisites
 RUN apt-get update && \
     apt-get install -y \
-        python3 \
-        git 
+        python3 
 
 #Add new user
 RUN useradd -u 65533 codezone_participant
