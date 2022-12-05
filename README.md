@@ -12,7 +12,7 @@ The server will host on https://localhost:3000.
 
 ### To get the production server started: 
 
-To start using Docker look at [a relative link](dockerusage.md)
+To start using Docker look at [dockerusage.md](dockerusage.md)
 
 ## Configuring CodeZone/CodeComp
 
