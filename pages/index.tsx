@@ -1,19 +1,19 @@
 import React from "react";
 import { useRouter } from "next/router";
-import { useCookies } from "react-cookie";
 import { useEffect } from "react";
+import { useSession } from "next-auth/react";
 
 const Index = () => {
-    const [cookie] = useCookies(["user"]);
     const router = useRouter();
+    const { status } = useSession();
 
     useEffect(() => {
-        if (cookie.user) {
+        if (status == "authenticated") {
             // if the user is logged in, route to dashboard
             router.push("/dashboard");
         } else {
             // otherwise, route to the login page
-            router.push("/login");
+            router.push("/signin");
         }
     });
 

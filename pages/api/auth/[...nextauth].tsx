@@ -1,7 +1,8 @@
-import { NextAuthOptions } from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import { prisma } from "../../../src/db";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { NextApiHandler } from "next";
 
 const options: NextAuthOptions = {
     providers: [
@@ -13,13 +14,13 @@ const options: NextAuthOptions = {
                 password: { label: "password", type: "password" },
             },
             async authorize(credentials, req) {
-                const user = prisma.account.findUnique({
+                const user = await prisma.account.findUnique({
                     where: {
                         name: credentials.username,
                     }
                 });
 
-                if ((await user).password == credentials.password) {
+                if (user.password == credentials.password) {
                     return user;
                 } else {
                     return null;
@@ -28,13 +29,13 @@ const options: NextAuthOptions = {
         })
     ],
     pages: {
-        signIn: "/auth/signin",
-        signOut: "/auth/signout"
+        signIn: "/signin",
+        signOut: "/signout"
     },
     adapter: PrismaAdapter(prisma),
-    session: {
-        strategy: "jwt"
-    }
 }
 
-export default options;
+const auth: NextApiHandler = (req, res) => {
+    return NextAuth(req, res, options);
+};
+export default auth;
