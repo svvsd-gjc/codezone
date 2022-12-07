@@ -1,5 +1,5 @@
 # Pull the node docker image
-FROM node:17.8-bullseye-slim 
+FROM node:lts-bullseye
 #Expose neccesary ports
 EXPOSE 3000 5555
 
