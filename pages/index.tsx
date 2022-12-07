@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { getSession, useSession } from "next-auth/react";
 
 export async function getServerSideProps(ctx) {
-    const session = await getSession;
+    const session = await getSession();
     if (!session) {
         return { redirect: { destination: "/signin" } };
     } else {
