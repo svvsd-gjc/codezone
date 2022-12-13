@@ -4,7 +4,6 @@ To get the dev server started, run:
 
 ```bash
 npm i
-npx prisma db push
 npm run dev
 ```
 
