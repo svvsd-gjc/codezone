@@ -7,7 +7,7 @@ datasource db {
   url      = env("MONGO_URL")
 }
 
-model Account {
+model User {
   id              String    @id @default(auto()) @map("_id") @db.ObjectId
   name            String    @unique
   password        String
@@ -15,11 +15,11 @@ model Account {
   points          Int       @default(0)
   team            Int       @default(0)
   solved_problems Problem[]
-  account         Auth[]
-  session         Session[]
+  accounts        Account[]
+  sessions        Session[]
 }
 
-model Auth {
+model Account {
   id                String  @id @default(cuid()) @map("_id") @db.ObjectId
   userId            String
   type              String
@@ -32,7 +32,7 @@ model Auth {
   scope             String?
   id_token          String? @db.String
   session_state     String?
-  user              Account @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -42,17 +42,17 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
-  user         Account  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Problem {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  name          String   @unique
+  id            String  @id @default(auto()) @map("_id") @db.ObjectId
+  name          String  @unique
   description   String
-  difficulty    Float    @default(0.0)
-  points        Int      @default(0)
-  example_cases Json     @default("{}")
-  test_cases    Json     @default("{}")
-  accountId     String?  @db.ObjectId
-  Account       Account? @relation(fields: [accountId], references: [id])
+  difficulty    Float   @default(0.0)
+  points        Int     @default(0)
+  example_cases Json    @default("{}")
+  test_cases    Json    @default("{}")
+  accountId     String? @db.ObjectId
+  Account       User?   @relation(fields: [accountId], references: [id])
 }

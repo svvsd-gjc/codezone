@@ -14,11 +14,15 @@ const options: NextAuthOptions = {
                 password: { label: "password", type: "password" },
             },
             async authorize(credentials, req) {
-                const user = await prisma.account.findUnique({
+                const user = await prisma.user.findUnique({
                     where: {
                         name: credentials.username,
                     }
                 });
+
+                if (!user) {
+                    return null;
+                }
 
                 if (user.password == credentials.password) {
                     return user;
