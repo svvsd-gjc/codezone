@@ -12,7 +12,7 @@ const api = nc<NextApiRequest, NextApiResponse>({
 });
 
 api.post((req, res) => {
-    prisma.account.findUnique({
+    prisma.user.findUnique({
         where: {
             name: req.body.username
         }

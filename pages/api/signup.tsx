@@ -35,7 +35,7 @@ api.post((req, res) => {
     }
 
     // Call database and request account creation
-    prisma.account.create({
+    prisma.user.create({
         data: {
             name: sanitizedName,
             password: sanitizedPass
