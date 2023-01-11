@@ -1,19 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
-import { getSession, useSession } from "next-auth/react";
-
-export async function getServerSideProps(ctx) {
-    const session = await getSession();
-    if (!session) {
-        return { redirect: { destination: "/signin" } };
-    } else {
-        return { redirect: { destination: "/dashboard" } };
-    }
-}
 
 const Index = () => {
-    return (<></>); // TODO skeleton loader
+    const { push, isReady } = useRouter();
+    const session = useSession();
+
+    useEffect(() => {
+        if (!isReady) return;
+        if (session.status == "authenticated") {
+            push("/dashboard");
+        } else {
+            push("/signin");
+        }
+    });
+
+    return (<></>);
 };
 
 export default Index;

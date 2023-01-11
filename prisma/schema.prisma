@@ -15,34 +15,6 @@ model User {
   points          Int       @default(0)
   team            Int       @default(0)
   solved_problems Problem[]
-  accounts        Account[]
-  sessions        Session[]
-}
-
-model Account {
-  id                String  @id @default(cuid()) @map("_id") @db.ObjectId
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String? @db.String
-  access_token      String? @db.String
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String? @db.String
-  session_state     String?
-  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
-}
-
-model Session {
-  id           String   @id @default(cuid()) @map("_id") @db.ObjectId
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Problem {

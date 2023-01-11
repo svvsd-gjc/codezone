@@ -1,5 +1,5 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
-import { prisma } from "../../../src/db";
+import { prisma, log } from "../../../src/db";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { NextApiHandler } from "next";
@@ -35,6 +35,20 @@ const options: NextAuthOptions = {
     pages: {
         signIn: "/signin",
         signOut: "/signout"
+    },
+    session: {
+        strategy: "jwt",
+    },
+    logger: {
+        error(code, meta) {
+            log.error(code, meta);
+        },
+        debug(code, meta) {
+            log.debug(code, meta);
+        },
+        warn(code) {
+            log.warn(code);
+        },
     },
     adapter: PrismaAdapter(prisma),
 }
