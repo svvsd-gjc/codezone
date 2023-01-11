@@ -1,7 +1,10 @@
+import { useSession } from "next-auth/react";
 import RedirectButton from "./button";
 const config = require("../code-comp.json");
 
 function Header() {
+
+    const session = useSession();
 
     return (
         <div className="flex-col w-screen">
@@ -10,7 +13,13 @@ function Header() {
                 {/* Buttons */}
                 <RedirectButton href="/leaderboard">leaderboard</RedirectButton>
                 <RedirectButton href="/">problems</RedirectButton>
-                <RedirectButton href="/signin">login{config["allow-signups"] ? <>/signup</> : <></>}</RedirectButton>
+                {
+                    session.status == "authenticated"
+                        ?
+                        <RedirectButton href="/logout">logout <span className="text-white">({session.data.user.name})</span></RedirectButton>
+                        :
+                        <RedirectButton href="/login">login{config["allow-signups"] ? <>/signup</> : <></>}</RedirectButton>
+                }
             </div>
         </div>
     );
