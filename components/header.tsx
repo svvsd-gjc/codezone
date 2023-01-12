@@ -16,9 +16,9 @@ function Header() {
                 {
                     session.status == "authenticated"
                         ?
-                        <RedirectButton href="/logout">logout <span className="text-white">({session.data.user.name})</span></RedirectButton>
+                        <RedirectButton href="/signout">logout <span className="text-white">({session.data.user.name})</span></RedirectButton>
                         :
-                        <RedirectButton href="/login">login{config["allow-signups"] ? <>/signup</> : <></>}</RedirectButton>
+                        <RedirectButton href="/signin">login{config["allow-signups"] ? <>/signup</> : <></>}</RedirectButton>
                 }
             </div>
         </div>
