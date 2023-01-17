@@ -1,11 +1,8 @@
 import RedirectButton from "../components/button";
-import { useCookies } from "react-cookie";
 import sha256 from "crypto-js/sha256";
 import { signIn } from "next-auth/react";
 
 const Signin = () => {
-
-    const [cookie, setCookie] = useCookies(["user"]);
 
     const handleSignup = async (e) => {
         e.preventDefault();

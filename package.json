@@ -21,7 +21,6 @@
     "next-connect": "0.13",
     "pino": "8.6",
     "react": "17.0",
-    "react-cookie": "4.1",
     "react-dom": "17.0"
   },
   "devDependencies": {

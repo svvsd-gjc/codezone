@@ -1,11 +1,7 @@
-import Header from "../components/header";
 import RedirectButton from "../components/button";
-import { useCookies } from "react-cookie";
 import sha256 from "crypto-js/sha256";
 
 const Signup = () => {
-
-    const [cookie, setCookie] = useCookies(["user"]);
 
     const handleSignup = async (e) => {
         e.preventDefault();
@@ -23,17 +19,6 @@ const Signup = () => {
                 password
             })
         });
-
-        const data = await response.json();
-
-        if (data.success) {
-            const tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            setCookie("user", data.name, { path: "/", expires: tomorrow });
-            window.location.href = "/";
-        } else {
-            alert(data.message);
-        }
     };
 
     return (
