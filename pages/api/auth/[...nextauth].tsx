@@ -49,8 +49,7 @@ const options: NextAuthOptions = {
         warn(code) {
             log.warn(code);
         },
-    },
-    adapter: PrismaAdapter(prisma),
+    }
 }
 
 const auth: NextApiHandler = (req, res) => {

@@ -12,7 +12,6 @@
     "test": "next dev | cypress run --browser electron"
   },
   "dependencies": {
-    "@next-auth/prisma-adapter": "^1.0.5",
     "@prisma/client": "4.2",
     "cookie": "0.5",
     "crypto-js": "4.1",
