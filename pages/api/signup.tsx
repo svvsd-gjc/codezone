@@ -13,6 +13,9 @@ const api = nc<NextApiRequest, NextApiResponse>({
 });
 
 api.post((req, res) => {
+    // make sure signups are allowed
+    if (!config["allow-signups"]) { return res.status(503).json({ statusCode: 503, message: "Signups are not allowed at this time." }) }
+
     const sanitizedName = req.body.username.trim();
     const sanitizedPass = req.body.password.trim();
 
@@ -41,10 +44,10 @@ api.post((req, res) => {
             password: sanitizedPass
         }
     }).then((account) => {
-        res.status(200).json({success: true, name: account.name});
+        res.status(200).json({ success: true, name: account.name });
     }).catch((err) => {
-        res.status(400).json({success: false, message: "Failed to create user."});
-    }); 
+        res.status(400).json({ success: false, message: "Failed to create user." });
+    });
 });
 
 export default api;
