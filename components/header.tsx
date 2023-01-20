@@ -1,4 +1,4 @@
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import RedirectButton from "./button";
 const config = require("../code-comp.json");
 
@@ -14,9 +14,12 @@ function Header() {
                 <RedirectButton href="/leaderboard">leaderboard</RedirectButton>
                 <RedirectButton href="/">problems</RedirectButton>
                 {
+                    session.status == "loading" ? <RedirectButton>loading...</RedirectButton> : null
+                }
+                {
                     session.status == "authenticated"
                         ?
-                        <RedirectButton href="/signout">logout <span className="text-white">({session.data.user.name})</span></RedirectButton>
+                        <RedirectButton href="/" onClick={() => signOut()}>logout <span className="text-white">({session.data.user.name})</span></RedirectButton>
                         :
                         <RedirectButton href="/signin">login{config["allow-signups"] ? <>/signup</> : <></>}</RedirectButton>
                 }

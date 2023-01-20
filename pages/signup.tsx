@@ -1,5 +1,6 @@
 import RedirectButton from "../components/button";
 import sha256 from "crypto-js/sha256";
+import { signIn } from "next-auth/react";
 
 const Signup = () => {
 
@@ -9,6 +10,7 @@ const Signup = () => {
         const username = e.target[0].value;
         const password = sha256(e.target[1].value).toString();
 
+        // create the account via API
         const response = await fetch("/api/signup", {
             method: "POST",
             headers: {
@@ -19,6 +21,13 @@ const Signup = () => {
                 password
             })
         });
+
+        // sign into the newly created account with next-auth
+        signIn("credentials", {
+            username: username,
+            password: password,
+            callbackUrl: "/",
+        })
     };
 
     return (
