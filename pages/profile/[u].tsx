@@ -1,5 +1,4 @@
 import { prisma } from "../../src/db";
-import React from "react";
 
 export async function getServerSideProps(ctx) {
     const query = ctx.query;

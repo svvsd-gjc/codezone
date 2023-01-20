@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 
-function RedirectButton({children, href, className}: {children: any, href?: string, className?: string}) {
+function RedirectButton({ children, href, className }: { children: any, href?: string, className?: string }) {
     const router = useRouter();
 
     const handleClick = (e) => {

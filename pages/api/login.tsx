@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "../../src/db";
 import nc from "next-connect";
+import { prisma } from "../../src/db";
 
 const api = nc<NextApiRequest, NextApiResponse>({
     onError: (err, req, res, next) => {

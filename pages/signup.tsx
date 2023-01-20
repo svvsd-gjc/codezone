@@ -1,7 +1,6 @@
-import Header from "../components/header";
-import RedirectButton from "../components/button";
-import { useCookies } from "react-cookie";
 import sha256 from "crypto-js/sha256";
+import { useCookies } from "react-cookie";
+import RedirectButton from "../components/button";
 
 const Signup = () => {
 

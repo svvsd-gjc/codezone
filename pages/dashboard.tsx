@@ -1,9 +1,6 @@
-import Head from 'next/head';
-import { prisma } from "../src/db";
-import Header from '../components/header';
-import RedirectButton from '../components/button';
-import React from 'react';
 import config from "../code-comp.json";
+import RedirectButton from '../components/button';
+import { prisma } from "../src/db";
 
 export async function getServerSideProps(ctx) {
     // This will load server-side assets like problems, user profiles, and leaderboard

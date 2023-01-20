@@ -1,8 +1,8 @@
+import { exec } from "child_process";
+import multer from "multer";
 import { NextApiRequest, NextApiResponse } from "next";
 import nc from "next-connect";
-import multer from "multer";
-import { exec } from "child_process";
-import { prisma, log } from "../../src/db";
+import { log, prisma } from "../../src/db";
 
 interface File {
     filename: string,
@@ -29,7 +29,7 @@ async function completeProblem(problem_id: string, problem_points: number, usern
     });
 
     // if the user has already completed this problem, return to avoid duplicate points
-    if (completed.solved_problems.find((problem) => problem.id === problem_id)) {return;}
+    if (completed.solved_problems.find((problem) => problem.id === problem_id)) { return; }
 
     // update the database record for the user
     await prisma.account.update({

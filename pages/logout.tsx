@@ -1,7 +1,6 @@
-import React from 'react';
-import { useCookies } from "react-cookie";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { useCookies } from "react-cookie";
 
 const Logout = () => {
     // Remove cuser cookie and reroute to home

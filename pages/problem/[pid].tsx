@@ -1,8 +1,7 @@
 import React from 'react';
-import Header from '../../components/header';
+import { useCookies } from "react-cookie";
 import Submit from "../../components/submit";
 import { prisma } from "../../src/db";
-import { useCookies } from "react-cookie";
 
 export async function getServerSideProps(ctx) {
     const query = ctx.query;

@@ -1,7 +1,5 @@
-import React from 'react';
-import { prisma } from "../src/db";
-import Header from '../components/header';
 import RedirectButton from '../components/button';
+import { prisma } from "../src/db";
 
 export async function getServerSideProps(ctx) {
     // This will load server-side users, ordered by points

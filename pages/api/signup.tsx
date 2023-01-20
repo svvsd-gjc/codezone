@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "../../src/db";
 import nc from "next-connect";
 import config from "../../code-comp.json";
+import { prisma } from "../../src/db";
 
 const api = nc<NextApiRequest, NextApiResponse>({
     onError: (err, req, res, next) => {
@@ -41,10 +41,10 @@ api.post((req, res) => {
             password: sanitizedPass
         }
     }).then((account) => {
-        res.status(200).json({success: true, name: account.name});
+        res.status(200).json({ success: true, name: account.name });
     }).catch((err) => {
-        res.status(400).json({success: false, message: "Failed to create user."});
-    }); 
+        res.status(400).json({ success: false, message: "Failed to create user." });
+    });
 });
 
 export default api;

@@ -1,7 +1,6 @@
-import React from "react";
 import { useRouter } from "next/router";
-import { useCookies } from "react-cookie";
 import { useEffect } from "react";
+import { useCookies } from "react-cookie";
 
 const Index = () => {
     const [cookie] = useCookies(["user"]);
