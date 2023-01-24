@@ -46,7 +46,7 @@ const Problems = ({ problems }) => (
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex items-center">
                                                 <div className="ml-4">
-                                                    <RedirectButton href={"/problem/" + problem.id + "/?ctx=none"} className="rounded">{problem.name}</RedirectButton>
+                                                    <RedirectButton href={"/problem/" + problem.id + "/?ctx=none"}>{problem.name}</RedirectButton>
                                                 </div>
                                             </div>
                                         </td>
