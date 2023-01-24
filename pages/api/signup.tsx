@@ -13,6 +13,9 @@ const api = nc<NextApiRequest, NextApiResponse>({
 });
 
 api.post((req, res) => {
+    // make sure signups are allowed
+    if (!config["allow-signups"]) { return res.status(503).json({ statusCode: 503, message: "Signups are not allowed at this time." }) }
+
     const sanitizedName = req.body.username.trim();
     const sanitizedPass = req.body.password.trim();
 
@@ -35,7 +38,7 @@ api.post((req, res) => {
     }
 
     // Call database and request account creation
-    prisma.account.create({
+    prisma.user.create({
         data: {
             name: sanitizedName,
             password: sanitizedPass

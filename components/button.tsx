@@ -1,12 +1,15 @@
 import { useRouter } from 'next/router';
 
-function RedirectButton({ children, href, className }: { children: any, href?: string, className?: string }) {
+function RedirectButton({ children, href, className, onClick }: { children: any, href?: string, className?: string, onClick?: Function }) {
     const router = useRouter();
 
     const handleClick = (e) => {
+        if (onClick) {
+            onClick();
+        }
         e.preventDefault();
         router.push(href);
-    };
+    }
 
     return (
         <button className="px-2" onClick={handleClick}>

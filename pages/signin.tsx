@@ -2,7 +2,7 @@ import RedirectButton from "../components/button";
 import sha256 from "crypto-js/sha256";
 import { signIn } from "next-auth/react";
 
-const Signup = () => {
+const Signin = () => {
 
     const handleSignup = async (e) => {
         e.preventDefault();
@@ -10,23 +10,10 @@ const Signup = () => {
         const username = e.target[0].value;
         const password = sha256(e.target[1].value).toString();
 
-        // create the account via API
-        const response = await fetch("/api/signup", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                username,
-                password
-            })
-        });
-
-        // sign into the newly created account with next-auth
         signIn("credentials", {
             username: username,
             password: password,
-            callbackUrl: "/",
+            callbackUrl: "/dashboard"
         })
     };
 
@@ -38,14 +25,14 @@ const Signup = () => {
                         <input type="text" placeholder="username" className="bg-gray-200"></input>
                         <input type="password" placeholder="password" className="bg-gray-200"></input>
                         <div className="p-2">
-                            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">Sign up</button>
+                            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">Sign in</button>
                         </div>
                     </form>
-                    <RedirectButton href="/signin">Or log in!</RedirectButton> {/* TODO this button kinda sucks, make it look better */}
+                    <RedirectButton href="/signup">Or sign up!</RedirectButton> {/* TODO this button kinda sucks, make it look better */}
                 </div>
             </div>
         </>
     );
 };
 
-export default Signup;
+export default Signin;

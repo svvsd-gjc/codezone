@@ -1,23 +1,21 @@
+import React, { useEffect } from "react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
-import { useCookies } from "react-cookie";
 
 const Index = () => {
-    const [cookie] = useCookies(["user"]);
-    const router = useRouter();
+    const { push, isReady } = useRouter();
+    const session = useSession();
 
     useEffect(() => {
-        if (cookie.user) {
-            // if the user is logged in, route to dashboard
-            router.push("/dashboard");
+        if (!isReady) return;
+        if (session.status == "authenticated") {
+            push("/dashboard");
         } else {
-            // otherwise, route to the login page
-            router.push("/login");
+            push("/signin");
         }
     });
 
-
-    return (<></>); // TODO skeleton loader
+    return (<></>);
 };
 
 export default Index;

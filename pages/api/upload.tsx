@@ -15,7 +15,7 @@ interface UploadRequest extends NextApiRequest {
 
 async function completeProblem(problem_id: string, problem_points: number, username: string) {
     // check if the user has already completed this problem
-    const completed = await prisma.account.findUnique({
+    const completed = await prisma.user.findUnique({
         where: {
             name: username
         },
@@ -32,7 +32,7 @@ async function completeProblem(problem_id: string, problem_points: number, usern
     if (completed.solved_problems.find((problem) => problem.id === problem_id)) { return; }
 
     // update the database record for the user
-    await prisma.account.update({
+    await prisma.user.update({
         where: {
             name: username
         },

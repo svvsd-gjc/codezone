@@ -1,10 +1,10 @@
-import { useCookies } from "react-cookie";
+import { signOut, useSession } from "next-auth/react";
 import RedirectButton from "./button";
 const config = require("../code-comp.json");
 
 function Header() {
 
-    const [cookie, setCookie] = useCookies(["user"]);
+    const session = useSession();
 
     return (
         <div className="flex-col w-screen">
@@ -14,11 +14,14 @@ function Header() {
                 <RedirectButton href="/leaderboard">leaderboard</RedirectButton>
                 <RedirectButton href="/">problems</RedirectButton>
                 {
-                    cookie.user
+                    session.status == "loading" ? <RedirectButton>loading...</RedirectButton> : null
+                }
+                {
+                    session.status == "authenticated"
                         ?
-                        <RedirectButton href="/logout">logout <span className="text-white">({cookie.user})</span></RedirectButton>
+                        <RedirectButton href="/" onClick={() => signOut()}>logout <span className="text-white">({session.data.user.name})</span></RedirectButton>
                         :
-                        <RedirectButton href="/login">login{config["allow-signups"] ? <>/signup</> : <></>}</RedirectButton>
+                        <RedirectButton href="/signin">login{config["allow-signups"] ? <>/signup</> : <></>}</RedirectButton>
                 }
             </div>
         </div>

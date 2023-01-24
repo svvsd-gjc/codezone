@@ -3,7 +3,7 @@ import { prisma } from "../src/db";
 
 export async function getServerSideProps(ctx) {
     // This will load server-side users, ordered by points
-    const team0 = await prisma.account.findMany({
+    const team0 = await prisma.user.findMany({
         orderBy: {
             points: 'desc'
         },
@@ -16,7 +16,7 @@ export async function getServerSideProps(ctx) {
             points: true,
         }
     });
-    const team1 = await prisma.account.findMany({
+    const team1 = await prisma.user.findMany({
         orderBy: {
             points: 'desc'
         },

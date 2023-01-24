@@ -1,5 +1,5 @@
+import { useSession } from 'next-auth/react';
 import React from 'react';
-import { useCookies } from "react-cookie";
 import Submit from "../../components/submit";
 import { prisma } from "../../src/db";
 
@@ -29,8 +29,7 @@ export async function getServerSideProps(ctx) {
 
 const Problem = ({ problem, id, context }) => {
 
-    const [cookie, setCookie] = useCookies(["user"]);
-    const user = cookie.user;
+    const session = useSession();
 
     const example_cases = problem.example_cases;
 
@@ -58,15 +57,18 @@ const Problem = ({ problem, id, context }) => {
             <div className="grow bg-gray-50">
                 <div className="font-extrabold">submissions</div>
                 {/* fancy multer form data thingy, no idea how it works i got this off stack overflow */}
-                <form className="py-2" action={"/api/upload?p=" + id + "&u=" + user} method="post" encType="multipart/form-data">
-                    <input type="file" name="uploaded_file"></input>
-                    <Submit></Submit>
-                    <div>
-                        {context == "graded_true" ? <span className="bg-green-500 rounded px-2 text-2xl">Correct</span> : null}
-                        {context == "graded_false" ? <span className="bg-red-500 rounded px-2 text-2xl">Incorrect</span> : null}
-                        {context == "error" ? <span className="bg-red-500 rounded px-2 text-2xl">Error</span> : null}
-                    </div>
-                </form>
+                {session.status != "loading" ?
+                    <form className="py-2" action={"/api/upload?p=" + id + "&u=" + session.data.user.name} method="post" encType="multipart/form-data">
+                        <input type="file" name="uploaded_file"></input>
+                        <Submit></Submit>
+                        <div>
+                            {context == "graded_true" ? <span className="bg-green-500 rounded px-2 text-2xl">Correct</span> : null}
+                            {context == "graded_false" ? <span className="bg-red-500 rounded px-2 text-2xl">Incorrect</span> : null}
+                            {context == "error" ? <span className="bg-red-500 rounded px-2 text-2xl">Error</span> : null}
+                        </div>
+                    </form>
+                    : <div>Loading...</div>
+                }
             </div>
         </div>;
     }
