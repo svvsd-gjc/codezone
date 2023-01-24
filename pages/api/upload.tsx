@@ -65,12 +65,12 @@ async function checkCase(inputs: any, output: any, type: string, path: string) {
         }
     });
 
-    // Log and check final result
+    // Log and check final result8
     let res: boolean;
-    if (type == "number") {
-        res = Math.abs(parseFloat(result) - parseFloat(output)) < 0.001;
-    } else {
-        res = (result === output.join("\n"));
+    switch (type) {
+        case "int": res = parseInt(result) === parseInt(output)
+        case "f32": res = Math.abs(parseFloat(result) - parseFloat(output)) < 8.38e-8;
+        case "f64": res = Math.abs(parseFloat(result) - parseFloat(output)) < 8.38e-16;
     }
     log.debug(`Got '${result}', expected '${output}'`);
     return res;
