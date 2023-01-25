@@ -68,19 +68,26 @@ async function checkCase(inputs: string[], outputs: string[], type: string, path
     // log and check final result8
     // if the type is a string, the entire outputs array can be joined and matched as a chunk
     // otherwise, iterate through each line of result output, parse it, and compare it with the relevant output element
-    let res: boolean;
+    let res: boolean = true;
     if (type == "str") {
         res = (result.trim() == outputs.join("\n"))
     } else {
-        let lines = result.split("\n");
+        let lines = result.trim().split("\n");
+        log.info(lines);
         for (const i in lines) {
             let ln = lines[i];
-            if (!(type == "int" ? parseInt(ln) === parseInt(outputs[i]) : Math.abs(parseFloat(ln) - parseFloat(outputs[i])) < 8.38e-8)) {
+            let lnres = false;
+            if (type == "int") {
+                lnres = parseInt(ln) === parseInt(outputs[i])
+            } else if (type == "float") {
+                lnres = Math.abs(parseFloat(ln) - parseFloat(outputs[i])) < 8.38e-8
+            }
+
+            if (lnres == false) {
                 res = false;
                 break;
             }
         }
-        res = true;
     }
     return res;
 }
