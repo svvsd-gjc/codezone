@@ -20,8 +20,7 @@ const prompt = require("prompts");
             message: "Case output type",
             choices: [
                 { value: "int" },
-                { value: "f32" },
-                { value: "f64" },
+                { value: "float" },
                 { value: "str" },
             ]
         }, {

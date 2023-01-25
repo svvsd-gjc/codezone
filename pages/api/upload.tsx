@@ -49,8 +49,8 @@ async function completeProblem(problem_id: string, problem_points: number, usern
     });
 }
 
-async function checkCase(inputs: any, output: any, type: string, path: string) {
-    // execute file with exec and feed inputs to it. after it finishes, read the stdout.
+async function checkCase(inputs: string[], outputs: string[], type: string, path: string) {
+    // execute file with exec and feed inputs to istringt. after it finishes, read the stdout.
     // if the output is correct, return true.
     // if the output is incorrect, return false.
     const result: string = await new Promise((resolve, reject) => {
@@ -65,18 +65,23 @@ async function checkCase(inputs: any, output: any, type: string, path: string) {
         }
     });
 
-    // Log and check final result8
+    // log and check final result8
+    // if the type is a string, the entire outputs array can be joined and matched as a chunk
+    // otherwise, iterate through each line of result output, parse it, and compare it with the relevant output element
     let res: boolean;
     if (type == "str") {
-        res = result === output.join("\n");
-    } else if (type == "int") {
-        res = parseInt(result) === parseInt(output);
-    } else if (type == "f32") {
-        res = Math.abs(parseFloat(result) - parseFloat(output)) < 8.38e-8;
-    } else if (type == "f64") {
-        res = Math.abs(parseFloat(result) - parseFloat(output)) < 8.38e-16;
+        res = (result.trim() == outputs.join("\n"))
+    } else {
+        let lines = result.split("\n");
+        for (const i in lines) {
+            let ln = lines[i];
+            if (!(type == "int" ? parseInt(ln) === parseInt(outputs[i]) : Math.abs(parseFloat(ln) - parseFloat(outputs[i])) < 8.38e-8)) {
+                res = false;
+                break;
+            }
+        }
+        res = true;
     }
-    log.debug(`Got '${result}', expected '${output}'`);
     return res;
 }
 
