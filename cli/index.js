@@ -1,38 +1,45 @@
-const prompt = require("prompt-sync")();
-
-let x = 0;
-let cases = {};
-
-while (true) {
-
-    console.log(`[INPUT${x}] Press enter to cancel input feed.`);
-    let inputs = [];
+// format: cases = {case{n}: {inputs: [], outputs: [], type: str}}
+// type can be: int, f32, f64, and str
+const prompt = require("prompts");
+(async () => {
+    let cases = {};
+    let n = 0;
 
     while (true) {
-        const i = prompt(`input${x}.${inputs.length}: `);
-        if (i == "") { break } else { inputs.push(i) };
+        let c = await prompt([{
+            type: "list",
+            name: "inputs",
+            message: "Case inputs, seperated by commas",
+        }, {
+            type: "list",
+            name: "outputs",
+            message: "Case outputs, seperated by commas",
+        }, {
+            type: "select",
+            name: "type",
+            message: "Case output type",
+            choices: [
+                { value: "int" },
+                { value: "f32" },
+                { value: "f64" },
+                { value: "str" },
+            ]
+        }, {
+            type: "toggle",
+            name: "continue",
+            message: "Continue?",
+            active: "yes",
+            inactive: "no",
+        }]);
+        let cont = c.continue;
+        delete c.continue
+        cases[`case${n}`] = c;
+
+        if (!cont) {
+            break;
+        }
+
+        n++;
     }
-
-    console.log(`[OUTPUT${x}] Press enter to cancel output feed.`);
-    let outputs = [];
-
-    while (true) {
-        const o = prompt(`output${x}.${outputs.length}: `);
-        if (o == "") { break } else { outputs.push(o) };
-    }
-
-    cases[`case${x}`] = {
-        inputs: inputs,
-        outputs: outputs,
-        type: prompt("Type (string/number): ")
-    }
-
-    if (prompt("Continue (y/n)? ") == "n") {
-        console.log("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
-        console.log(JSON.stringify(cases));
-        break;
-    }
-
-    x++;
-
-}
+    console.log(JSON.stringify(cases));
+})();

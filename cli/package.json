@@ -4,6 +4,6 @@
   "main": "index.js",
   "license": "ISC",
   "dependencies": {
-    "prompt-sync": "^4.2.0"
+    "prompts": "^2.4"
   }
 }
