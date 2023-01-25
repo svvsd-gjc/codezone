@@ -73,7 +73,6 @@ async function checkCase(inputs: string[], outputs: string[], type: string, path
         res = (result.trim() == outputs.join("\n"))
     } else {
         let lines = result.trim().split("\n");
-        log.info(lines);
         for (const i in lines) {
             let ln = lines[i];
             let lnres = false;
