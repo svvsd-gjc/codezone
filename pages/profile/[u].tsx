@@ -2,7 +2,7 @@ import { prisma } from "../../src/db";
 
 export async function getServerSideProps(ctx) {
     const query = ctx.query;
-    const user = await prisma.account.findUnique({
+    const user = await prisma.user.findUnique({
         where: {
             id: query.u
         },
