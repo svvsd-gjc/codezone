@@ -2,7 +2,14 @@ import RedirectButton from "../components/button";
 import sha256 from "crypto-js/sha256";
 import { signIn } from "next-auth/react";
 
-const Signin = () => {
+export async function getServerSideProps({ query }) {
+    const { error } = query;
+    return {
+        props: { err: error ? error : null }
+    }
+}
+
+const Signin = ({ err }: { err: any }) => {
 
     const handleSignup = async (e) => {
         e.preventDefault();
@@ -28,7 +35,8 @@ const Signin = () => {
                             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">Sign in</button>
                         </div>
                     </form>
-                    <RedirectButton href="/signup">Or sign up!</RedirectButton> {/* TODO this button kinda sucks, make it look better */}
+                    <RedirectButton href="/signup">Or sign up!</RedirectButton>
+                    {err ? <span className="bg-red-400 rounded p-1">Error: {err}</span> : null}
                 </div>
             </div>
         </>
