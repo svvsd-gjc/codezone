@@ -53,11 +53,11 @@ async function checkCase(inputs: string[], outputs: string[], type: string, path
     // execute file with exec and feed inputs to istringt. after it finishes, read the stdout.
     // if the output is correct, return true.
     // if the output is incorrect, return false.
-    const result: string = await new Promise((resolve, reject) => {
+    const result: string = await new Promise((resolve, _reject) => {
         const proc = exec(`python3 ${path}`, {
             timeout: 500, // 1 second
             maxBuffer: 5 * 1024 * 1024, // 5MB
-        }, (err, stdout, stderr) => {
+        }, (_err, stdout, _stderr) => {
             resolve(stdout);
         });
         for (const input in inputs) {

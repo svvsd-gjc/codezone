@@ -50,9 +50,9 @@ const Problem = ({ problem, id, context }) => {
             </div>
             <div className="grow bg-gray-100">
                 <div className="font-extrabold">example inputs</div>
-                {example_cases.case0.inputs.map((input: any, index: React.Key) => (<span key={index}>{example_cases.case0.inputs[index]}<br /></span>))}
+                {example_cases.case0.inputs.map((index: React.Key) => (<span key={index}>{example_cases.case0.inputs[index]}<br /></span>))}
                 <div className="font-extrabold">example outputs</div>
-                {example_cases.case0.outputs.map((output, index) => (<span key={index}>{example_cases.case0.outputs[index]}<br /></span>))}
+                {example_cases.case0.outputs.map((index: React.Key) => (<span key={index}>{example_cases.case0.outputs[index]}<br /></span>))}
             </div>
             <div className="grow bg-gray-50">
                 <div className="font-extrabold">submissions</div>

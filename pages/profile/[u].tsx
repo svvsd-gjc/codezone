@@ -36,7 +36,7 @@ const Profile = ({ data }) => (
         }
         <br></br>
         {
-            data.solved_problems.map((item) => (
+            data.solved_problems.map((item: any) => (
                 <div className="inline-block px-2 m-2 text-3xl bg-green-200 rounded" key={item.id}>
                     <span className="text-gray-400">+ </span>
                     {item.name} ({item.difficulty} difficulty)

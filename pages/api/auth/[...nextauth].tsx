@@ -1,7 +1,6 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import { prisma, log } from "../../../src/db";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { NextApiHandler } from "next";
 
 const options: NextAuthOptions = {
@@ -13,7 +12,7 @@ const options: NextAuthOptions = {
                 username: { label: "username", type: "text" },
                 password: { label: "password", type: "password" },
             },
-            async authorize(credentials, req) {
+            async authorize(credentials) {
                 const user = await prisma.user.findUnique({
                     where: {
                         name: credentials.username,
