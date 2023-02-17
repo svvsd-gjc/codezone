@@ -29,7 +29,7 @@ async function completeProblem(problem_id: string, problem_points: number, usern
     });
 
     // if the user has already completed this problem, return to avoid duplicate points
-    if (completed.solved_problems.find((problem) => problem.id === problem_id)) { return; }
+    if (completed?.solved_problems.find((problem) => problem.id === problem_id)) { return; }
 
     // update the database record for the user
     await prisma.user.update({
@@ -61,7 +61,7 @@ async function checkCase(inputs: string[], outputs: string[], type: string, path
             resolve(stdout);
         });
         for (const input in inputs) {
-            proc.stdin.write(inputs[input] + "\n");
+            proc.stdin?.write(inputs[input] + "\n");
         }
     });
 
@@ -93,27 +93,24 @@ async function checkCase(inputs: string[], outputs: string[], type: string, path
 
 const upload = multer({
     dest: "./uploads/",
-    filename: (req, file, cb) => {
-        cb(null, file.originalname);
-    },
     limits: {
         fileSize: 10000
     },
-    fileFilter: (req, file, cb) => {
+    fileFilter: (_req, file, cb) => {
         if (!file.originalname.match(/\.(py|txt)$/)) {
-            return cb(new Error("Only .py, .pyc and .txt files are allowed!"), false);
+            return cb(null, false);
         }
         cb(null, true);
     }
 });
 
 const api = nc<UploadRequest, NextApiResponse>({
-    onError: (err, req, res, next) => {
+    onError: (err, _req, res, _next) => {
         log.info(err.stack);
         res.statusCode = 500;
         res.statusMessage = "Oops, something went wrong!";
     },
-    onNoMatch: (req, res) => {
+    onNoMatch: (_req, res) => {
         res.statusCode = 404;
         res.statusMessage = "Not found!";
     }
@@ -139,7 +136,10 @@ api.post(async (req, res) => {
             points: true
         }
     });
-    const cases: any = problem.test_cases;
+    const cases: any = problem?.test_cases;
+    if (!problem) {
+        return;
+    }
 
     // Test each case
     for (const case_name in cases) {
