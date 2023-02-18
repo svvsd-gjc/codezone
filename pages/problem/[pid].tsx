@@ -1,13 +1,14 @@
+import { GetServerSidePropsContext } from 'next';
 import { useSession } from 'next-auth/react';
 import React from 'react';
 import Submit from "../../components/submit";
 import { prisma } from "../../src/db";
 
-export async function getServerSideProps(ctx) {
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     const query = ctx.query;
     const problem = await prisma.problem.findUnique({
         where: {
-            id: query.pid
+            id: query.pid?.toString(),
         },
         select: {
             id: true,
@@ -27,7 +28,7 @@ export async function getServerSideProps(ctx) {
     };
 }
 
-const Problem = ({ problem, id, context }) => {
+const Problem = ({ problem, id, context }: { problem: any, id: number, context: any }) => {
 
     const session = useSession();
 
@@ -58,7 +59,7 @@ const Problem = ({ problem, id, context }) => {
                 <div className="font-extrabold">submissions</div>
                 {/* fancy multer form data thingy, no idea how it works i got this off stack overflow */}
                 {session.status != "loading" ?
-                    <form className="py-2" action={"/api/upload?p=" + id + "&u=" + session.data.user.name} method="post" encType="multipart/form-data">
+                    <form className="py-2" action={"/api/upload?p=" + id + "&u=" + session.data?.user?.name} method="post" encType="multipart/form-data">
                         <input type="file" name="uploaded_file"></input>
                         <Submit></Submit>
                         <div>

@@ -1,10 +1,11 @@
+import { GetServerSidePropsContext } from "next";
 import { prisma } from "../../src/db";
 
-export async function getServerSideProps(ctx) {
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     const query = ctx.query;
     const user = await prisma.user.findUnique({
         where: {
-            id: query.u
+            id: query.u?.toString()
         },
         select: {
             name: true,
@@ -26,7 +27,7 @@ export async function getServerSideProps(ctx) {
     };
 }
 
-const Profile = ({ data }) => (
+const Profile = ({ data }: { data: any }) => (
     <div className="m-4 rounded bg-gray-200">
         <span className="inline-block m-3 px-2 rounded text-5xl font-bold bg-blue-400">{data.name}</span>
         <span className="float-right m-3 px-2 rounded text-4xl font-bold bg-blue-300">team {data.team}</span>
