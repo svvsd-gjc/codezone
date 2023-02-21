@@ -1,8 +1,9 @@
+import { GetServerSidePropsContext } from "next";
 import config from "../code-comp.json";
 import RedirectButton from '../components/button';
 import { prisma } from "../src/db";
 
-export async function getServerSideProps(ctx) {
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     // This will load server-side assets like problems, user profiles, and leaderboard
     const problems = await prisma.problem.findMany({
         orderBy: {
@@ -21,7 +22,7 @@ export async function getServerSideProps(ctx) {
     };
 }
 
-const Problems = ({ problems }) => (
+const Problems = ({ problems }: { problems: any[] }) => (
     <>
 
         {/* Server-loaded problem table */}
