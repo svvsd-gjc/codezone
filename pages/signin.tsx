@@ -2,7 +2,7 @@ import RedirectButton from "../components/button";
 import sha256 from "crypto-js/sha256";
 import { signIn } from "next-auth/react";
 
-export async function getServerSideProps({ query }) {
+export async function getServerSideProps({ query }: { query: any }) {
     const { error } = query;
     return {
         props: { err: error ? error : null }
@@ -11,7 +11,7 @@ export async function getServerSideProps({ query }) {
 
 const Signin = ({ err }: { err: any }) => {
 
-    const handleSignup = async (e) => {
+    const handleSignup = async (e: any) => {
         e.preventDefault();
 
         const username = e.target[0].value;
