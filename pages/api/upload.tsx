@@ -70,16 +70,16 @@ async function checkCase(inputs: string[], outputs: string[], type: string, path
     // otherwise, iterate through each line of result output, parse it, and compare it with the relevant output element
     let res: boolean = true;
     if (type == "str") {
-        res = (result.trim() == outputs.join("\n"))
+        res = (result.trim() == outputs.join("\n"));
     } else {
-        let lines = result.trim().split("\n");
+        const lines = result.trim().split("\n");
         for (const i in lines) {
-            let ln = lines[i];
+            const ln = lines[i];
             let lnres = false;
             if (type == "int") {
-                lnres = parseInt(ln) === parseInt(outputs[i])
+                lnres = parseInt(ln) === parseInt(outputs[i]);
             } else if (type == "float") {
-                lnres = Math.abs(parseFloat(ln) - parseFloat(outputs[i])) < 8.38e-8
+                lnres = Math.abs(parseFloat(ln) - parseFloat(outputs[i])) < 8.38e-8;
             }
 
             if (lnres == false) {

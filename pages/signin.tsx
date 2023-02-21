@@ -6,7 +6,7 @@ export async function getServerSideProps({ query }: { query: any }) {
     const { error } = query;
     return {
         props: { err: error ? error : null }
-    }
+    };
 }
 
 const Signin = ({ err }: { err: any }) => {
@@ -21,7 +21,7 @@ const Signin = ({ err }: { err: any }) => {
             username: username,
             password: password,
             callbackUrl: "/dashboard"
-        })
+        });
     };
 
     return (

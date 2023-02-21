@@ -9,7 +9,7 @@ function RedirectButton({ children, href, onClick }: { children: any, href?: str
         }
         e.preventDefault();
         router.push(href);
-    }
+    };
 
     return (
         <button className="px-2" onClick={handleClick}>

@@ -6,7 +6,7 @@ export async function getServerSideProps({ query }: { query: any }) {
     const { error } = query;
     return {
         props: { err: error ? error : null }
-    }
+    };
 }
 
 const Signup = ({ err }: { err: any }) => {
@@ -34,7 +34,7 @@ const Signup = ({ err }: { err: any }) => {
             username: username,
             password: password,
             callbackUrl: "/",
-        })
+        });
     };
 
     return (
