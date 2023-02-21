@@ -3,12 +3,12 @@ import { useRouter } from 'next/router';
 function RedirectButton({ children, href, onClick }: { children: any, href?: string, onClick?: Function }) {
     const router = useRouter();
 
-    const handleClick = (e) => {
+    const handleClick = (e: any) => {
         if (onClick) {
             onClick();
         }
         e.preventDefault();
-        router.push(href);
+        router.push(href ?? "");
     };
 
     return (
