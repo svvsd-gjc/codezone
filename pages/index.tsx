@@ -7,7 +7,7 @@ const Index = () => {
     const session = useSession();
 
     useEffect(() => {
-        if (!isReady) return;
+        if (!isReady) {return;}
         if (session.status == "authenticated") {
             push("/dashboard");
         } else {

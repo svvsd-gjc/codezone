@@ -15,7 +15,7 @@ const options: NextAuthOptions = {
             async authorize(credentials) {
                 const user = await prisma.user.findUnique({
                     where: {
-                        name: credentials.username,
+                        name: credentials?.username,
                     }
                 });
 
@@ -23,7 +23,7 @@ const options: NextAuthOptions = {
                     return null;
                 }
 
-                if (user.password == credentials.password) {
+                if (user.password == credentials?.password) {
                     return user;
                 } else {
                     return null;
@@ -49,9 +49,7 @@ const options: NextAuthOptions = {
             log.warn(code);
         },
     }
-}
-
-const auth: NextApiHandler = (req, res) => {
-    return NextAuth(req, res, options);
 };
+
+const auth: NextApiHandler = (req, res) => NextAuth(req, res, options);
 export default auth;

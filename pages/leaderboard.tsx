@@ -1,7 +1,8 @@
+import { GetServerSidePropsContext } from 'next';
 import RedirectButton from '../components/button';
 import { prisma } from "../src/db";
 
-export async function getServerSideProps(ctx) {
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     // This will load server-side users, ordered by points
     const team0 = await prisma.user.findMany({
         orderBy: {
@@ -34,7 +35,7 @@ export async function getServerSideProps(ctx) {
     };
 }
 
-const Leaderboard = ({ team0, team1 }) => (
+const Leaderboard = ({ team0, team1 }: { team0: any[], team1: any[] }) => (
     <>
 
         {/* Server-loaded problem table */}
@@ -58,7 +59,7 @@ const Leaderboard = ({ team0, team1 }) => (
                                     <tr key={account.id}>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex items-center">
-                                                <RedirectButton href={"/profile/" + account.id + "/"} className="ml-4">
+                                                <RedirectButton href={"/profile/" + account.id + "/"}>
                                                     {account.name}
                                                 </RedirectButton>
                                             </div>
