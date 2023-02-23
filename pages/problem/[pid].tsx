@@ -50,10 +50,11 @@ const Problem = ({ problem, id, context }: { problem: any, id: number, context: 
                 {problem.description}
             </div>
             <div className="grow bg-gray-100">
+                {/* render example case so the user can see what they'll be graded for */}
                 <div className="font-extrabold">example inputs</div>
-                {example_cases.case0.inputs.map((index: React.Key) => (<span key={index}>{example_cases.case0.inputs[index]}<br /></span>))}
+                {example_cases.case0.inputs.map((_in: any, index: number) => (<span key={index}>{example_cases.case0.inputs[index]}<br /></span>))}
                 <div className="font-extrabold">example outputs</div>
-                {example_cases.case0.outputs.map((index: React.Key) => (<span key={index}>{example_cases.case0.outputs[index]}<br /></span>))}
+                {example_cases.case0.outputs.map((_out: any, index: number) => (<span key={index}>{example_cases.case0.outputs[index]}<br /></span>))}
             </div>
             <div className="grow bg-gray-50">
                 <div className="font-extrabold">submissions</div>
