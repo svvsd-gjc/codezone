@@ -1,6 +1,6 @@
 ## Getting Started
 
-To get the dev server started, run:
+### To get the dev server started, run:
 
 ```bash
 npm i
@@ -12,11 +12,9 @@ While this local database approach is not the best for scaling, it should be abl
 
 If you'd like to use Docker, you can do the following:
 
-```bash
-sudo docker run --name=codezone -p 3000:3000 -p 5555:5555 kylandodds/webserver:latest
-```
+### To get the production server started: 
 
-The server will host on https://localhost:3000.
+To start using Docker look at [dockerusage.md](dockerusage.md)
 
 ## Configuring CodeZone/CodeComp
 
