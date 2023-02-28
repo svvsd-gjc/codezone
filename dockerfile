@@ -12,6 +12,5 @@ RUN apt-get update && \
 RUN useradd -u 65533 codezone_participant
 #Set working directory
 WORKDIR /CodeZone
-ADD ~/CodeZone /CodeZone
 #Start the server on launch
-ENTRYPOINT npx next lint --fix && npx next build && npx next start
+ENTRYPOINT npx next lint --fix && npm run dev 
