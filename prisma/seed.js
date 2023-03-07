@@ -15,5 +15,17 @@ const PrismaClient = require("@prisma/client").PrismaClient;
         }
     });
 
+    // add basic problems
+    await client.problem.create({
+        data: {
+            name: "Sum",
+            description: "Sum the numbers given, terminated by -1.",
+            difficulty: 1,
+            points: 1,
+            example_cases: `{"case0":{"inputs":["1","2","3","-1"],"outputs":["6"],"type":"int"}}`,
+            test_cases: `{"case0":{"inputs":["1","2","3","-1"],"outputs":["6"],"type":"int"}}`,
+        }
+    })
+
     await client.$disconnect();
 })();
