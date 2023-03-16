@@ -1,7 +1,61 @@
+// this CLI should be used to initially create problems with set test and example cases.
+// the prompt should look as following:
+// name: ...
+// desc: ...
+// example_cases: -> case maker
+// test_cases: -> case maker
+// created problem ==> databse
+const prompt = require("prompts");
+const PrismaClient = require("@prisma/client").PrismaClient;
+const client = new PrismaClient();
+
+// TODO use arg flag to create single case sets, for use in updating previously existing records
+
+(async () => {
+    let p = await prompt([
+        {
+            type: "text",
+            name: "name",
+            message: "Name",
+        },
+        {
+            type: "text",
+            name: "desc",
+            message: "Description",
+        },
+        {
+            type: "number",
+            name: "points",
+            message: "Problem points",
+        },
+        {
+            type: "number",
+            name: "diff",
+            message: "Problem difficulty",
+        }
+    ]);
+    console.log("Create example cases:");
+    let examples = await makeCase();
+    console.log("Create test cases:");
+    let tests = await makeCase();
+    console.log("Creating problem...");
+    let res = await client.problem.create({
+        data: {
+            name: p.name,
+            description: p.desc,
+            points: p.points,
+            difficulty: p.diff,
+            example_cases: examples,
+            test_cases: tests,
+
+        }
+    });
+    console.log(res);
+})();
+
 // format: cases = {case{n}: {inputs: [], outputs: [], type: str}}
 // type can be: int, f32, f64, and str
-const prompt = require("prompts");
-(async () => {
+async function makeCase() {
     let cases = {};
     let n = 0;
 
@@ -40,5 +94,5 @@ const prompt = require("prompts");
 
         n++;
     }
-    console.log(JSON.stringify(cases));
-})();
+    return cases;
+}
