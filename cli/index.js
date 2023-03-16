@@ -51,6 +51,7 @@ const client = new PrismaClient();
         }
     });
     console.log(res);
+    client.$disconnect();
 })();
 
 // format: cases = {case{n}: {inputs: [], outputs: [], type: str}}
