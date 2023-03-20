@@ -33,15 +33,18 @@ const Profile = ({ data }: { data: any }) => (
         <span className="float-right m-3 px-2 rounded text-4xl font-bold bg-blue-300">team {data.team}</span>
         <span className="float-right m-3 px-2 rounded text-4xl font-bold bg-blue-300">{data.points} point(s)</span>
         {
-            data.organizer ? <span className="float-right m-3 px-2 rounded text-4xl font-bold bg-blue-300 transition all">organizer</span> : null
+            data.organizer ? <span className="float-right m-3 px-2 rounded text-4xl font-bold bg-blue-300">organizer</span> : null
         }
         <br></br>
         {
             data.solved_problems.map((item: any) => (
-                <div className="inline-block px-2 m-2 text-3xl bg-green-200 rounded" key={item.id}>
-                    <span className="text-gray-400">+ </span>
-                    {item.name} ({item.difficulty} difficulty)
-                </div>
+                <>
+                    <div className="inline-block px-2 m-2 text-3xl bg-green-200 hover:bg-green-400 transition rounded" key={item.id}>
+                        <span className="text-gray-400">+ </span>
+                        {item.name} ({item.difficulty} difficulty)
+                    </div>
+                    <br></br>
+                </>
             ))
         }
     </div>
