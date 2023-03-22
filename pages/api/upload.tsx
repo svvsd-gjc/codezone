@@ -50,9 +50,7 @@ async function completeProblem(problem_id: string, problem_points: number, usern
 }
 
 async function checkCase(inputs: string[], outputs: string[], type: string, path: string) {
-    // execute file with exec and feed inputs to istringt. after it finishes, read the stdout.
-    // if the output is correct, return true.
-    // if the output is incorrect, return false.
+    // execute file with python and supply each case input sequentially
     const result: string = await new Promise((resolve, _reject) => {
         const proc = exec(`python3 ${path}`, {
             timeout: 500, // 1 second
@@ -65,7 +63,7 @@ async function checkCase(inputs: string[], outputs: string[], type: string, path
         }
     });
 
-    // log and check final result8
+    // log and check final results
     // if the type is a string, the entire outputs array can be joined and matched as a chunk
     // otherwise, iterate through each line of result output, parse it, and compare it with the relevant output element
     let res: boolean = true;
@@ -119,6 +117,7 @@ const api = nc<UploadRequest, NextApiResponse>({
 api.use(upload.single("uploaded_file"));
 
 api.post(async (req, res) => {
+    const now = performance.now();
     const id: string = req.query.p as string;
     const name: string = req.query.u as string;
     const file = req.file;
@@ -149,14 +148,14 @@ api.post(async (req, res) => {
 
         if (!(await checkCase(this_case.inputs, this_case.outputs, this_case.type, file.path))) {
             res.redirect(`/problem/${id}/?ctx=graded_false`);
-            log.info(`${name} failed problem #${id}`);
+            log.info(`${name} failed problem #${id} in ${performance.now() - now}ms`);
             return;
         }
     }
 
     // If all of the test cases passed, complete the problem
     completeProblem(problem.id, problem.points, name);
-    log.info(`${name} completed problem #${id}`);
+    log.info(`${name} completed problem #${id} in ${performance.now() - now}ms`);
     res.redirect(`/problem/${id}/?ctx=graded_true`);
 });
 
