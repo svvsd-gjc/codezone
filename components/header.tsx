@@ -8,8 +8,8 @@ function Header() {
 
     return (
         <div className="flex-col w-screen">
-            <div className="text-size-4 bg-gray-300 text-black hover:bg-gray-600 hover:text-white transition-all p-2">
-                <span className="px-6">CODE_ZONE</span>
+            <div className="text-size-4 bg-gray-300 text-black hover:bg-gray-600 hover:text-white dark:bg-gray-700 transition-all p-2">
+                <span className="px-6 dark:text-white">CODE_ZONE</span>
                 {/* Buttons */}
                 <RedirectButton href="/leaderboard">leaderboard</RedirectButton>
                 <RedirectButton href="/">problems</RedirectButton>
