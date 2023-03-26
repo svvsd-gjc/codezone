@@ -44,19 +44,19 @@ const Problem = ({ problem, id, context }: { problem: any, id: number, context: 
     );
 
     function problem_dashboard() {
-        return <div className="flex mb-4 pt-4 text-xl">
-            <div className="flex-1 bg-gray-50">
+        return <div className="flex mb-4 pt-4 text-xl dark:text-white">
+            <div className="flex-1 bg-gray-50 dark:bg-gray-700">
                 <div className="font-extrabold">description</div>
                 {problem.description}
             </div>
-            <div className="flex-1 bg-gray-100">
+            <div className="flex-1 bg-gray-100 dark:bg-gray-600">
                 {/* render example case so the user can see what they'll be graded for */}
                 <div className="font-extrabold">example inputs</div>
                 {example_cases.case0.inputs.map((_in: any, index: number) => (<span key={index}>{example_cases.case0.inputs[index]}<br /></span>))}
                 <div className="font-extrabold">example outputs</div>
                 {example_cases.case0.outputs.map((_out: any, index: number) => (<span key={index}>{example_cases.case0.outputs[index]}<br /></span>))}
             </div>
-            <div className="flex-1 bg-gray-50">
+            <div className="flex-1 bg-gray-50 dark:bg-gray-700">
                 <div className="font-extrabold">submit</div>
                 {/* fancy multer form data thingy, no idea how it works i got this off stack overflow */}
                 {session.status != "loading" ?
@@ -76,9 +76,9 @@ const Problem = ({ problem, id, context }: { problem: any, id: number, context: 
     }
 
     function problem_info() {
-        return <div className="flex-col">
+        return <div className="flex-col dark:text-white">
             <span className="text-4xl px-2">
-                <span className="rounded bg-gray-200 px-2">
+                <span className="rounded bg-gray-200 dark:bg-gray-600 px-2">
                     {problem.name}
                 </span>
             </span>
