@@ -40,7 +40,7 @@ const Leaderboard = ({ team0, team1 }: { team0: any[], team1: any[] }) => (
 
         {/* Server-loaded problem table */}
 
-        <h1 className="p-4 text-xl">Beginner</h1>
+        <h1 className="p-4 text-xl dark:text-white">Beginner</h1>
         <div className="flex flex-col p-4">
             <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -52,7 +52,7 @@ const Leaderboard = ({ team0, team1 }: { team0: any[], team1: any[] }) => (
                                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Points</th>
                                 </tr>
                             </thead>
-                            <tbody className="bg-white divide-y divide-gray-200 content dark:bg-gray-600 dark:divide-gray-500">
+                            <tbody className="bg-white divide-y divide-gray-200 content dark:bg-gray-600 dark:divide-gray-500 dark:text-white">
 
                                 {/* Map problems to table rows */}
                                 {team0.map(account => (
@@ -77,7 +77,7 @@ const Leaderboard = ({ team0, team1 }: { team0: any[], team1: any[] }) => (
             </div>
         </div>
 
-        <h1 className="p-4 text-xl">Advanced</h1>
+        <h1 className="p-4 text-xl dark:text-white">Advanced</h1>
         <div className="flex flex-col p-4">
             <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -89,16 +89,16 @@ const Leaderboard = ({ team0, team1 }: { team0: any[], team1: any[] }) => (
                                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Points</th>
                                 </tr>
                             </thead>
-                            <tbody className="bg-white divide-y divide-gray-200 content dark:bg-gray-600 dark:divide-gray-500">
+                            <tbody className="bg-white divide-y divide-gray-200 content dark:bg-gray-600 dark:divide-gray-500 dark:text-white">
 
                                 {/* Map problems to table rows */}
                                 {team1.map(account => (
                                     <tr key={account.id}>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex items-center">
-                                                <div className="ml-4">
+                                                <RedirectButton href={"/profile/" + account.id + "/"}>
                                                     {account.name}
-                                                </div>
+                                                </RedirectButton>
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
