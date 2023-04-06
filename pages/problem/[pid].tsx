@@ -45,18 +45,18 @@ const Problem = ({ problem, id, context }: { problem: any, id: number, context: 
 
     function problem_dashboard() {
         return <div className="flex mb-4 pt-4 text-xl dark:text-white">
-            <div className="flex-1 bg-gray-50 dark:bg-gray-700">
+            <div className="flex-1 bg-gray-50 dark:bg-gray-700 px-1">
                 <div className="font-extrabold">description</div>
                 {problem.description}
             </div>
-            <div className="flex-1 bg-gray-100 dark:bg-gray-600">
+            <div className="flex-1 bg-gray-100 dark:bg-gray-600 px-1">
                 {/* render example case so the user can see what they'll be graded for */}
                 <div className="font-extrabold">example inputs</div>
-                {example_cases.case0.inputs.map((_in: any, index: number) => (<span key={index}>{example_cases.case0.inputs[index]}<br /></span>))}
+                {example_cases.case0.inputs.map((_in: any, index: number) => (<span key={index} className="dark:text-gray-300">{example_cases.case0.inputs[index]}<br /></span>))}
                 <div className="font-extrabold">example outputs</div>
-                {example_cases.case0.outputs.map((_out: any, index: number) => (<span key={index}>{example_cases.case0.outputs[index]}<br /></span>))}
+                {example_cases.case0.outputs.map((_out: any, index: number) => (<span key={index} className="dark:text-gray-300">{example_cases.case0.outputs[index]}<br /></span>))}
             </div>
-            <div className="flex-1 bg-gray-50 dark:bg-gray-700">
+            <div className="flex-1 bg-gray-50 dark:bg-gray-700 px-1">
                 <div className="font-extrabold">submit</div>
                 {/* fancy multer form data thingy, no idea how it works i got this off stack overflow */}
                 {session.status != "loading" ?
@@ -64,9 +64,9 @@ const Problem = ({ problem, id, context }: { problem: any, id: number, context: 
                         <input type="file" name="uploaded_file"></input>
                         <Submit></Submit>
                         <div>
-                            {context == "graded_true" ? <span className="bg-green-500 rounded px-2 text-2xl">Correct</span> : null}
-                            {context == "graded_false" ? <span className="bg-red-500 rounded px-2 text-2xl">Incorrect</span> : null}
-                            {context == "error" ? <span className="bg-red-500 rounded px-2 text-2xl">Error</span> : null}
+                            {context == "graded_true" ? <span className="bg-green-500 dark:bg-green-700 rounded px-2 text-2xl">Correct</span> : null}
+                            {context == "graded_false" ? <span className="bg-red-500 dark:bg-red-700 rounded px-2 text-2xl">Incorrect</span> : null}
+                            {context == "error" ? <span className="bg-red-500 dark:bg-red-700 rounded px-2 text-2xl">Error</span> : null}
                         </div>
                     </form>
                     : <div>Loading...</div>
@@ -83,12 +83,12 @@ const Problem = ({ problem, id, context }: { problem: any, id: number, context: 
                 </span>
             </span>
             <span className="text-4xl px-2">
-                <span className="rounded bg-blue-400 px-2">
+                <span className="rounded bg-blue-400 dark:bg-blue-500 px-2">
                     points: {problem.points}
                 </span>
             </span>
             <span className="text-4xl px-2">
-                <span className="rounded bg-blue-400 px-2">
+                <span className="rounded bg-blue-400 dark:bg-blue-500 px-2">
                     difficulty: {problem.difficulty}
                 </span>
             </span>
