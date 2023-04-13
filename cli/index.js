@@ -6,53 +6,63 @@
 // test_cases: -> case maker
 // created problem ==> databse
 const prompt = require("prompts");
+const { program } = require("commander");
 const PrismaClient = require("@prisma/client").PrismaClient;
 const client = new PrismaClient();
 
-// TODO use arg flag to create single case sets, for use in updating previously existing records
+program.option("-s, --single").description("Create a single case, instead of a whole problem.").parse();
+const options = program.opts();
 
-(async () => {
-    let p = await prompt([
-        {
-            type: "text",
-            name: "name",
-            message: "Name",
-        },
-        {
-            type: "text",
-            name: "desc",
-            message: "Description",
-        },
-        {
-            type: "number",
-            name: "points",
-            message: "Problem points",
-        },
-        {
-            type: "number",
-            name: "diff",
-            message: "Problem difficulty",
-        }
-    ]);
-    console.log("Create example cases:");
-    let examples = await makeCase();
-    console.log("Create test cases:");
-    let tests = await makeCase();
-    console.log("Creating problem...");
-    let res = await client.problem.create({
-        data: {
-            name: p.name,
-            description: p.desc,
-            points: p.points,
-            difficulty: p.diff,
-            example_cases: examples,
-            test_cases: tests,
+if (options["single"]) {
+    (async () => {
+        console.log("Entering single case mode.");
+        let cases = await makeCase();
+        console.log(JSON.stringify(cases));
+    })();
+} else {
+    (async () => {
+        let p = await prompt([
+            {
+                type: "text",
+                name: "name",
+                message: "Name",
+            },
+            {
+                type: "text",
+                name: "desc",
+                message: "Description",
+            },
+            {
+                type: "number",
+                name: "points",
+                message: "Problem points",
+            },
+            {
+                type: "number",
+                name: "diff",
+                message: "Problem difficulty",
+            }
+        ]);
+        console.log("Create example cases:");
+        let examples = await makeCase();
+        console.log("Create test cases:");
+        let tests = await makeCase();
+        console.log("Creating problem...");
+        let res = await client.problem.create({
+            data: {
+                name: p.name,
+                description: p.desc,
+                points: p.points,
+                difficulty: p.diff,
+                example_cases: examples,
+                test_cases: tests,
 
-        }
-    });
-    console.log(res);
-    client.$disconnect();
-})();
+            }
+        });
+        console.log(res);
+        client.$disconnect();
+    })();
+}
 
 // format: cases = {case{n}: {inputs: [], outputs: [], type: str}}
 // type can be: int, f32, f64, and str

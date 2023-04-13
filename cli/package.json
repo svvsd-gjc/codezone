@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "ISC",
   "dependencies": {
+    "commander": "^10.0.0",
     "prompts": "^2.4"
   }
 }
