@@ -41,12 +41,10 @@ const Signup = ({ err }: { err: any }) => {
         <>
             <div className="flex flex-col items-center justify-center h-screen bg-gray-100 dark:bg-gray-800">
                 <div className="w-full max-w-xs">
-                    <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={handleSignup}>
-                        <input type="text" placeholder="username" className="bg-gray-200"></input>
-                        <input type="password" placeholder="password" className="bg-gray-200"></input>
-                        <div className="p-2">
-                            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">Sign up</button>
-                        </div>
+                    <form className="bg-white dark:bg-gray-900 shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={handleSignup}>
+                        <input type="text" placeholder="username" className="w-full my-2 p-2 bg-gray-200 dark:bg-gray-300"></input>
+                        <input type="password" placeholder="password" className="w-full my-2 p-2 bg-gray-200 dark:bg-gray-300"></input>
+                        <button className="w-full p-2 my-3 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded" type="submit">Sign up</button>
                     </form>
                     <RedirectButton href="/signin">Or log in!</RedirectButton>
                     {err ? <span className="bg-red-400 rounded p-1">Error: {err}</span> : null}
