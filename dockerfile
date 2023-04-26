@@ -8,6 +8,9 @@ RUN apt-get update && \
     apt-get install -y \
         python3 
 
+#Install OpenSSL
+RUN apt install openssl
+
 #Add new user
 RUN useradd -u 65533 codezone_participant
 #Set working directory
