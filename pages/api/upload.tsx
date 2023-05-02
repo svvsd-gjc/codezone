@@ -140,18 +140,25 @@ api.post(async (req, res) => {
         return;
     }
 
-    // Test each case
+    // TODO maybe make this whole thing only use once instance of the python runtime
+    // it'd be much faster, but it'd also be more dangerous beacuse of data persistence
+
+    // start each test case asynchronously
+    let case_promises: Promise<boolean>[] = [];
     for (const case_name in cases) {
+        case_promises.push(checkCase(cases[case_name].inputs, cases[case_name].outputs, cases[case_name].type, file.path));
+    }
 
-        const this_case = cases[case_name];
-        log.info(`Checking case '${case_name}'...`);
-
-        if (!(await checkCase(this_case.inputs, this_case.outputs, this_case.type, file.path))) {
+    // wait for all test cases to complete and check each one
+    const results = await Promise.all(case_promises);
+    for (const result in results) {
+        if (!results[result]) {
             res.redirect(`/problem/${id}/?ctx=graded_false`);
             log.info(`${name} failed problem #${id} in ${performance.now() - now}ms`);
             return;
         }
     }
+
 
     // If all of the test cases passed, complete the problem
     completeProblem(problem.id, problem.points, name);

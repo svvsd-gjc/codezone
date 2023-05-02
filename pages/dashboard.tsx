@@ -7,7 +7,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     // This will load server-side assets like problems, user profiles, and leaderboard
     const problems = await prisma.problem.findMany({
         orderBy: {
-            difficulty: 'desc'
+            name: 'asc'
         },
         select: {
             id: true,
