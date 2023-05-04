@@ -75,10 +75,12 @@ async function makeCase() {
             type: "list",
             name: "inputs",
             message: "Case inputs, seperated by commas",
+            separator: "|",
         }, {
             type: "list",
             name: "outputs",
             message: "Case outputs, seperated by commas",
+            separator: "|",
         }, {
             type: "select",
             name: "type",
