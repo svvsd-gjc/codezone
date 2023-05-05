@@ -12,7 +12,8 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
         // in order to add a style to the body, this is the only way i've found
         // however, if it's possible, doing it in globals.css would be ideal
         document.body.classList.add("dark:bg-gray-800");
-        document.body.classList.add("h-screen");
+        document.body.classList.add("h-fill");
+        document.body.classList.add("min-h-screen");
         document.body.classList.add("w-screen");
     });
 
