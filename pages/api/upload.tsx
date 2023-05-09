@@ -122,6 +122,13 @@ api.post(async (req, res) => {
     const name: string = req.query.u as string;
     const file = req.file;
 
+    // TODO maybe add a new context for this to let the user know what the issue is
+    if (!file) {
+        log.info("Encountered null file, aborting.");
+        res.redirect(`/problem/${id}/?ctx=none`);
+        return;
+    }
+
     log.info(`User ${name} attempting problem #${id} ('${file.filename}')`);
 
     // Fetch information from database
