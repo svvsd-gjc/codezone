@@ -1,4 +1,5 @@
 // this CLI should be used to initially create problems with set test and example cases.
+// it's also great for generating single cases and adding users
 // the prompt should look as following:
 // name: ...
 // desc: ...
@@ -7,10 +8,12 @@
 // created problem ==> databse
 const prompt = require("prompts");
 const { program } = require("commander");
+const sha256 = require("crypto-js/sha256");
 const PrismaClient = require("@prisma/client").PrismaClient;
 const client = new PrismaClient();
 
-program.option("-s, --single").description("Create a single case, instead of a whole problem.").parse();
+// TODO no descriptions??
+program.option("-s, --single").description("Create a single case, instead of a whole problem.").option("-u, --user").description("Add a new user to the database.").parse();
 const options = program.opts();
 
 if (options["single"]) {
@@ -18,6 +21,22 @@ if (options["single"]) {
         console.log("Entering single case mode.");
         let cases = await makeCase();
         console.log(JSON.stringify(cases));
+    })();
+} else if (options["user"]) {
+    (async () => {
+        let p = await prompt([
+            { type: "text", name: "name", message: "Username" }, { type: "text", name: "password", message: "Password" }, { type: "number", name: "team", message: "Team number" }
+        ]);
+        console.log("Adding user...");
+        let pass = sha256(p.password).toString();
+        await client.user.create({
+            data: {
+                name: p.name,
+                password: pass,
+                team: p.team,
+            }
+        });
+        console.log("Done!");
     })();
 } else {
     (async () => {
