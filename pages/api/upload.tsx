@@ -3,6 +3,7 @@ import multer from "multer";
 import { NextApiRequest, NextApiResponse } from "next";
 import nc from "next-connect";
 import { log, prisma } from "../../src/db";
+import codecompcfg from "../../code-comp.json";
 
 interface File {
     filename: string,
@@ -55,6 +56,7 @@ async function checkCase(inputs: string[], outputs: string[], type: string, path
         const proc = exec(`python3 ${path}`, {
             timeout: 500, // 1 second
             maxBuffer: 5 * 1024 * 1024, // 5MB
+            uid: codecompcfg["secure-uid"] ?? undefined,
         }, (_err, stdout, _stderr) => {
             resolve(stdout);
         });

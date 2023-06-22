@@ -6,5 +6,6 @@
   "password-len-min": 5,
   "difficulty-easy": 1,
   "difficulty-medium": 2,
-  "difficulty-hard": 3
+  "difficulty-hard": 3,
+  "secure-uid": 65533
 }
