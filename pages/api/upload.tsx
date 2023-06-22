@@ -151,7 +151,7 @@ api.post(async (req, res) => {
     // it'd be much faster, but it'd also be more dangerous beacuse of data persistence
 
     // start each test case asynchronously
-    let case_promises: Promise<boolean>[] = [];
+    const case_promises: Promise<boolean>[] = [];
     for (const case_name in cases) {
         case_promises.push(checkCase(cases[case_name].inputs, cases[case_name].outputs, cases[case_name].type, file.path));
     }
