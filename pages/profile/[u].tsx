@@ -15,6 +15,9 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
                 select: {
                     name: true,
                     difficulty: true,
+                },
+                orderBy: {
+                    name: "asc",
                 }
             },
             points: true
