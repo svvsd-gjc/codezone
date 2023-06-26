@@ -13,6 +13,7 @@ const PrismaClient = require("@prisma/client").PrismaClient;
 const client = new PrismaClient();
 
 // TODO no descriptions??
+// these don't show up in the help menu for some reason
 program.option("-s, --single").description("Create a single case, instead of a whole problem.").option("-u, --user").description("Add a new user to the database.").parse();
 const options = program.opts();
 
@@ -93,12 +94,12 @@ async function makeCase() {
         let c = await prompt([{
             type: "list",
             name: "inputs",
-            message: "Case inputs, seperated by commas",
+            message: "Case inputs, seperated by pipes (|)",
             separator: "|",
         }, {
             type: "list",
             name: "outputs",
-            message: "Case outputs, seperated by commas",
+            message: "Case outputs, seperated by pipes (|)",
             separator: "|",
         }, {
             type: "select",
