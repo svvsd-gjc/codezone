@@ -7,13 +7,14 @@ RUN apt update && \
 
 # Set working directory
 WORKDIR /CodeZone
+COPY ./ /CodeZone
 
 # Expose neccesary ports
 EXPOSE 3000 5555
 
 # Add secure user
-Run groupadd secure
+RUN groupadd secure
 RUN useradd -u 65533 -g secure cz
 
 # Start the server on launch
-ENTRYPOINT npx next lint --fix && npm run dev 
+ENTRYPOINT npm i && npx next lint --fix && npm run dev 
