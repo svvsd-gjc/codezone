@@ -12,9 +12,7 @@ const sha256 = require("crypto-js/sha256");
 const PrismaClient = require("@prisma/client").PrismaClient;
 const client = new PrismaClient();
 
-// TODO no descriptions??
-// these don't show up in the help menu for some reason
-program.option("-s, --single").description("Create a single case, instead of a whole problem.").option("-u, --user").description("Add a new user to the database.").parse();
+program.option("-s, --single", "create a single case").option("-u, --user", "create a new user").parse();
 const options = program.opts();
 
 if (options["single"]) {
