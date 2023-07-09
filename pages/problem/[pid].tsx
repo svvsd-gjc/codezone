@@ -71,6 +71,7 @@ const Problem = ({ problem, id, context }: { problem: any, id: number, context: 
                         <div>
                             {context == "graded_true" ? <span className="bg-green-500 dark:bg-green-700 rounded px-2 text-2xl">Correct</span> : null}
                             {context == "graded_false" ? <span className="bg-red-500 dark:bg-red-700 rounded px-2 text-2xl">Incorrect</span> : null}
+                            {context == "nofile" ? <span className="bg-blue-300 dark:bg-blue-500 rounded px-2 text-2xl">No file provided</span> : null}
                             {context == "error" ? <span className="bg-red-500 dark:bg-red-700 rounded px-2 text-2xl">Error</span> : null}
                         </div>
                     </form>
