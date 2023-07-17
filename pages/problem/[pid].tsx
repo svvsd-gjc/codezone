@@ -51,15 +51,15 @@ const Problem = ({ problem, id, context }: { problem: any, id: number, context: 
             </div>
             <div className="flex-1 bg-gray-100 dark:bg-gray-600 px-1">
                 {/* render all example cases so the user can see what they'll be graded for */}
-                {Object.keys(example_cases).map((case_name: any, case_idx: number) => {
-                    return <div className="pb-6" key={case_name}>
+                {Object.keys(example_cases).map((case_name: any, case_idx: number) =>
+                    <div className="pb-6" key={case_name}>
                         <span className="font-bold text-xl">Example Case {case_idx}</span>
                         <div className="font-extrabold">inputs</div>
                         {example_cases[case_name].inputs.map((_in: any, index: number) => (<span key={index} className="dark:text-gray-300">{example_cases[case_name].inputs[index]}<br /></span>))}
                         <div className="font-extrabold">outputs</div>
                         {example_cases[case_name].outputs.map((_out: any, index: number) => (<span key={index} className="dark:text-gray-300">{example_cases[case_name].outputs[index]}<br /></span>))}
-                    </div>;
-                })}
+                    </div>
+                )}
             </div>
             <div className="flex-1 bg-gray-50 dark:bg-gray-700 px-1">
                 <div className="font-extrabold">submit</div>
