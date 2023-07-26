@@ -17,4 +17,4 @@ RUN groupadd secure
 RUN useradd -u 65533 -g secure cz
 
 # Start the server on launch
-ENTRYPOINT npm i && npx next lint --fix && npx next start 
+ENTRYPOINT npm i && npx next lint --fix && npx next build && npx next start 
