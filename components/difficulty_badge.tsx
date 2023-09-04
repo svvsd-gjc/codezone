@@ -16,7 +16,7 @@ function DifficultyBadge(problem: any) {
                     Hard
                 </div>
                 :
-                <div className="bg-gray-100 shadow-inner dark:bg-gray-300 border border-purple-400 text-purple-700 px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
+                <div className="bg-gray-100 shadow-inner dark:bg-purple-100 border border-purple-400 text-purple-700 px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
                     Insane
                 </div>;
 }
