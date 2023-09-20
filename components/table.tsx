@@ -5,7 +5,7 @@ function Table({ children, headers }: { children: ReactNode, headers: string[] }
         <div className="overflow-x-auto">
             <div className="py-2 pb-8 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                 <div className="shadow-xl overflow-hidden border-b border-gray-200 dark:border-gray-500 sm:rounded-lg">
-                    <table className="min-w-full divide-y shadow-sm">
+                    <table className="min-w-full divide-gray-200 dark:divide-gray-500 divide-y shadow-sm">
                         <thead className="bg-gray-200 dark:bg-gray-700">
                             <tr key="head">
                                 {headers.map((value) =>
