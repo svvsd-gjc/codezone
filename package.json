@@ -20,7 +20,8 @@
     "next-connect": "^0.13.0",
     "pino": "8.6",
     "react": "18.2",
-    "react-dom": "18.2"
+    "react-dom": "18.2",
+    "tailwindcss-neumorphism": "^0.1.0"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.1.1",
