@@ -8,8 +8,12 @@ function Header() {
 
     return (
         <div className="flex-col w-screen">
-            <div className="text-size-4 bg-gray-300 text-black hover:bg-gray-600 hover:text-white dark:bg-gray-700 transition-all p-2">
-                <span className="px-6 dark:text-white">CODE_ZONE</span>
+            <div className="text-size-4 bg-gray-300 text-black hover:bg-gray-400 hover:text-white dark:hover:bg-gray-600 dark:bg-gray-700 transition-all p-2">
+                <span className="px-6 dark:text-white tracking-widest italic">
+                    <span className="bg-gradient-to-r from-blue-800 to-cyan-900 dark:from-blue-200 dark:to-cyan-300 text-transparent bg-clip-text drop-shadow-lg">
+                        CodeZone V{require("../package.json").version}
+                    </span>
+                </span>
                 {/* Buttons */}
                 <RedirectButton href="/leaderboard">leaderboard</RedirectButton>
                 <RedirectButton href="/">problems</RedirectButton>
