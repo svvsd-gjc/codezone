@@ -3,6 +3,7 @@ import { useSession } from 'next-auth/react';
 import React from 'react';
 import Submit from "../../components/submit";
 import { prisma } from "../../src/db";
+import DifficultyBadge from '../../components/difficulty_badge';
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     const query = ctx.query;
@@ -44,16 +45,16 @@ const Problem = ({ problem, id, context }: { problem: any, id: number, context: 
     );
 
     function problem_dashboard() {
-        return <div className="flex mb-4 pt-4 text-xl dark:text-white">
-            <div className="flex-1 bg-gray-50 dark:bg-gray-700 px-1">
+        return <div className="flex mb-4 pt-4 text-xl dark:text-gray-200">
+            <div className="flex-1 rounded-lg nm-flat-gray-200-lg dark:nm-flat-gray-800-lg m-2 p-4">
                 <div className="font-extrabold">description</div>
                 {problem.description}
             </div>
-            <div className="flex-1 bg-gray-100 dark:bg-gray-600 px-1">
+            <div className="flex-1 rounded-lg nm-flat-gray-200-lg dark:nm-flat-gray-800-lg m-2 p-4">
                 {/* render all example cases so the user can see what they'll be graded for */}
                 {Object.keys(example_cases).map((case_name: any, case_idx: number) =>
                     <div className="pb-6" key={case_name}>
-                        <span className="font-bold text-xl">Example Case {case_idx}</span>
+                        <span className="font-bold text-xl">example {case_idx + 1}</span>
                         <div className="font-extrabold">inputs</div>
                         {example_cases[case_name].inputs.map((_in: any, index: number) => (<span key={index} className="dark:text-gray-300">{example_cases[case_name].inputs[index]}<br /></span>))}
                         <div className="font-extrabold">outputs</div>
@@ -61,7 +62,7 @@ const Problem = ({ problem, id, context }: { problem: any, id: number, context: 
                     </div>
                 )}
             </div>
-            <div className="flex-1 bg-gray-50 dark:bg-gray-700 px-1">
+            <div className="flex-1 rounded-lg nm-flat-gray-200-lg dark:nm-flat-gray-800-lg m-2 p-4">
                 <div className="font-extrabold">submit</div>
                 {/* fancy multer form data thingy, no idea how it works i got this off stack overflow */}
                 {session.status != "loading" ?
@@ -82,7 +83,7 @@ const Problem = ({ problem, id, context }: { problem: any, id: number, context: 
     }
 
     function problem_info() {
-        return <div className="flex-col dark:text-white">
+        return <div className="flex-col dark:text-gray-200">
             <span className="text-4xl px-2">
                 <span className="rounded bg-gray-200 dark:bg-gray-600 px-2">
                     {problem.name}
