@@ -16,6 +16,7 @@ EXPOSE 3000 5555
 RUN groupadd secure
 
 # Make `secure` group own uploads, and restrict to read-only.
+RUN mkdir -p ./uploads
 RUN chown :secure ./uploads
 RUN chmod 555 ./uploads
 
