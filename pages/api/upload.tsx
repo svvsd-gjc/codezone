@@ -53,7 +53,7 @@ async function completeProblem(problem_id: string, problem_points: number, usern
 async function checkCase(inputs: string[], outputs: string[], type: string, path: string) {
     // execute file with python and supply each case input sequentially
     const result: string = await new Promise((resolve, _reject) => {
-        const proc = exec(`python3 ${path}`, {
+        const proc = exec(`python3 -I ${path}`, {
             timeout: 500, // 1 second
             maxBuffer: 5 * 1024 * 1024, // 5MB
             uid: codecompcfg["secure-uid"] ?? undefined,
