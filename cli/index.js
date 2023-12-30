@@ -3,6 +3,8 @@
 // the prompt should look as following:
 // name: ...
 // desc: ...
+// points: ...
+// difficulty: ...
 // example_cases: -> case maker
 // test_cases: -> case maker
 // created problem ==> databse
@@ -15,13 +17,13 @@ const client = new PrismaClient();
 program.option("-s, --single", "create a single case").option("-u, --user", "create a new user").parse();
 const options = program.opts();
 
-if (options["single"]) {
+if (options["single"]) { /* SINGLE CASE MODE */
     (async () => {
         console.log("Entering single case mode.");
         let cases = await makeCase();
         console.log(JSON.stringify(cases));
     })();
-} else if (options["user"]) {
+} else if (options["user"]) { /* CREATE NEW USER */
     (async () => {
         let p = await prompt([
             { type: "text", name: "name", message: "Username" }, { type: "text", name: "password", message: "Password" }, { type: "number", name: "team", message: "Team number" }
@@ -37,7 +39,7 @@ if (options["single"]) {
         });
         console.log("Done!");
     })();
-} else {
+} else { /* PROBLEM MODE */
     (async () => {
         let p = await prompt([
             {
@@ -85,10 +87,14 @@ if (options["single"]) {
 // format: cases = {case{n}: {inputs: [], outputs: [], type: str}}
 // type can be: int, f32, f64, and str
 async function makeCase() {
+    // create temp variables
     let cases = {};
     let n = 0;
 
     while (true) {
+        // prompt the user for inputs. the resulting format
+        // will already be the right shape to put in the output,
+        // so no need to change anything
         let c = await prompt([{
             type: "list",
             name: "inputs",
@@ -115,15 +121,23 @@ async function makeCase() {
             active: "yes",
             inactive: "no",
         }]);
+
+        // remove `continue` from the case, as we
+        // won't want to include it in the output
         let cont = c.continue;
-        delete c.continue
+        delete c.continue;
+
+        // add generated case to cases
         cases[`case${n}`] = c;
 
+        // if we're done, end the loop here. otherwise,
+        // keep running
         if (!cont) {
             break;
         }
-
         n++;
     }
+
+    // once the loop has terminated, we're done, and we can return the generated case set
     return cases;
 }
