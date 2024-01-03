@@ -1,26 +1,89 @@
 // this CLI should be used to initially create problems with set test and example cases.
 // it's also great for generating single cases and adding users
-// the prompt should look as following:
-// name: ...
-// desc: ...
-// points: ...
-// difficulty: ...
-// example_cases: -> case maker
-// test_cases: -> case maker
-// created problem ==> databse
 const prompt = require("prompts");
 const { program } = require("commander");
+const { exec } = require("child_process");
+const fs = require("fs/promises");
 const sha256 = require("crypto-js/sha256");
+const { Prisma } = require("@prisma/client");
+const { Header } = require("./header");
 const PrismaClient = require("@prisma/client").PrismaClient;
 const client = new PrismaClient();
 
-program.option("-s, --single", "create a single case").option("-u, --user", "create a new user").parse();
+// TODO maybe restructure the rest of these options into commands, since they're all mutually exclusive
+program.command("add <file>").description("add a problem to the database from a problem source file").action(async (file) => {
+    // when adding files, there is a required header that will determine how the problem gets added
+    // this header is in the form of a comment, and should be formatted like this:
+    // *test and example inputs follow the format, where a comma seperates cases, and a pipe seperates inputs: a|b|c,a|b|c
+    //
+    // #**
+    // #name <name> 
+    // #desc <description>
+    // #points <points>
+    // #difficulty <difficulty>
+    // #examples <example inputs>
+    // #tests <test inputs>
+    // #type <str|int|float>
+    // #**
+    // 
+
+    // parse file and header
+    let file_content = await fs.readFile(file, "utf-8");
+    let header = new Header(file_content);
+
+    // generate cases from header
+    let gen_cases = async (inputs) => {
+        let tmp = {};
+        for (let i in inputs) { // TODO parallelize?
+            let input = inputs[i];
+            await runWithInputs(file, input).then(async (out) => {
+                tmp[`case${i}`] = {
+                    inputs: input,
+                    outputs: out,
+                    type: header.type, // TODO automatically detect type
+                };
+            });
+        }
+        return tmp;
+    }
+    header.examples = await gen_cases(header.examples);
+    header.tests = await gen_cases(header.tests);;
+
+    // confirm with user
+    console.debug(header);
+    let confirm = await prompt({
+        type: "toggle",
+        name: "confirm",
+        message: "Confirm?",
+        active: "yes",
+        inactive: "no",
+    });
+    if (!confirm.confirm) {
+        console.log("Aborting...");
+        return;
+    } else {
+        console.log("Adding problem...");
+        client.problem.create({
+            data: {
+                name: header.name,
+                description: header.desc,
+                points: Number.parseInt(header.points),
+                difficulty: Number.parseInt(header.difficulty),
+                example_cases: header.examples,
+                test_cases: header.tests,
+            }
+        }).then((res) => {
+            client.$disconnect();
+        });
+    }
+});
+program.option("-m, --manual", "create a problem and assign test cases manually").option("-s, --single", "create a single case").option("-u, --user", "create a new user").parse();
 const options = program.opts();
 
 if (options["single"]) { /* SINGLE CASE MODE */
     (async () => {
         console.log("Entering single case mode.");
-        let cases = await makeCase();
+        let cases = await makeCaseSetPrompt();
         console.log(JSON.stringify(cases));
     })();
 } else if (options["user"]) { /* CREATE NEW USER */
@@ -39,7 +102,7 @@ if (options["single"]) { /* SINGLE CASE MODE */
         });
         console.log("Done!");
     })();
-} else { /* PROBLEM MODE */
+} else if (options["manual"]) { /* MANUAL MODE */
     (async () => {
         let p = await prompt([
             {
@@ -64,9 +127,9 @@ if (options["single"]) { /* SINGLE CASE MODE */
             }
         ]);
         console.log("Create example cases:");
-        let examples = await makeCase();
+        let examples = await makeCaseSetPrompt();
         console.log("Create test cases:");
-        let tests = await makeCase();
+        let tests = await makeCaseSetPrompt();
         console.log("Creating problem...");
         let res = await client.problem.create({
             data: {
@@ -84,9 +147,35 @@ if (options["single"]) { /* SINGLE CASE MODE */
     })();
 }
 
-// format: cases = {case{n}: {inputs: [], outputs: [], type: str}}
-// type can be: int, f32, f64, and str
-async function makeCase() {
+/**
+ * Runs the given Python file with the provied inputs and returns the resulting output
+ * @param {string} file file path
+ * @param {string[]} inputs input lines
+ * @returns {string[]} output lines
+ */
+async function runWithInputs(file, inputs) {
+    const result = await new Promise((resolve, reject) => {
+        const proc = exec(`python3 -I ${file}`, (err, stdout, stderr) => {
+            if (err) {
+                reject(err);
+            } else if (stderr) {
+                reject(stderr);
+            } else {
+                resolve(stdout);
+            }
+        });
+        for (const input in inputs) {
+            proc.stdin.write(inputs[input] + "\n");
+        }
+    });
+    return result.trim().split("\n");
+}
+
+/**
+ * Generates case set from user prompt
+ * @returns case set
+ */
+async function makeCaseSetPrompt() {
     // create temp variables
     let cases = {};
     let n = 0;
