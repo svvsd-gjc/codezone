@@ -11,7 +11,6 @@ class Header {
         this.difficulty = -1;
         this.examples = [];
         this.tests = [];
-        this.type = "str";
 
         // parse header content
         let lines = headerContent.match(/#(\*\*)[\s\S]*#(\*\*)/g)[0];

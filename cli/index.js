@@ -23,7 +23,6 @@ program.command("add <file>").description("add a problem to the database from a 
     // #difficulty <difficulty>
     // #examples <example inputs>
     // #tests <test inputs>
-    // #type <str|int|float>
     // #**
     // 
 
@@ -40,7 +39,7 @@ program.command("add <file>").description("add a problem to the database from a 
                 tmp[`case${i}`] = {
                     inputs: input,
                     outputs: out,
-                    type: header.type, // TODO automatically detect type
+                    type: inferType(out),
                 };
             });
         }
@@ -50,7 +49,7 @@ program.command("add <file>").description("add a problem to the database from a 
     header.tests = await gen_cases(header.tests);;
 
     // confirm with user
-    console.debug(header);
+    console.log(JSON.stringify(header, null, 4));
     let confirm = await prompt({
         type: "toggle",
         name: "confirm",
@@ -60,7 +59,7 @@ program.command("add <file>").description("add a problem to the database from a 
     });
     if (!confirm.confirm) {
         console.log("Aborting...");
-        return;
+        process.exit(0);
     } else {
         console.log("Adding problem...");
         client.problem.create({
@@ -229,4 +228,25 @@ async function makeCaseSetPrompt() {
 
     // once the loop has terminated, we're done, and we can return the generated case set
     return cases;
+}
+
+/**
+ * Infers the type of the given output.
+ * @param {string} output 
+ * @returns {"int"|"float"|"str"}
+ */
+function inferType(output) {
+    // if the output can be cast to a number, it's either an int or a float
+    k = Number.parseFloat(output);
+    if (!Number.isNaN(k)) {
+        // if the number is an integer, it's an int. otherwise, it's a float
+        if (Number.isInteger(k)) {
+            return "int";
+        } else {
+            return "float";
+        }
+    } else {
+        // otherwise, it's a string
+        return "str";
+    }
 }
