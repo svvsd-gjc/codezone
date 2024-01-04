@@ -33,8 +33,7 @@ program.command("add <file>").description("add a problem to the database from a 
     // generate cases from header
     let gen_cases = async (inputs) => {
         let tmp = {};
-        for (let i in inputs) { // TODO parallelize?
-            let input = inputs[i];
+        await Promise.all(inputs.map(async (input, i) => {
             await runWithInputs(file, input).then(async (out) => {
                 tmp[`case${i}`] = {
                     inputs: input,
@@ -42,7 +41,7 @@ program.command("add <file>").description("add a problem to the database from a 
                     type: inferType(out),
                 };
             });
-        }
+        }));
         return tmp;
     }
     header.examples = await gen_cases(header.examples);
