@@ -10,8 +10,8 @@ const { Header } = require("./header");
 const PrismaClient = require("@prisma/client").PrismaClient;
 const client = new PrismaClient();
 
-// TODO maybe restructure the rest of these options into commands, since they're all mutually exclusive
-program.command("add <file>").description("add a problem to the database from a problem source file").action(async (file) => {
+let add = program.command("add").description("add data to source database");
+add.command("file <file>").description("add a problem to the database from a problem source file").action(async (file) => {
     // when adding files, there is a required header that will determine how the problem gets added
     // this header is in the form of a comment, and should be formatted like this:
     // *test and example inputs follow the format, where a comma seperates cases, and a pipe seperates inputs: a|b|c,a|b|c
@@ -74,10 +74,23 @@ program.command("add <file>").description("add a problem to the database from a 
             client.$disconnect();
         });
     }
+})
+add.command("user <name> <password> <team>").description("add a user to the database").action(async (name, password, team) => {
+    // TODO
 });
+let make = program.command("make").description("create data for manual/testing use via prompts, does NOT add to database");
+make.command("case").description("create a single case").action(async () => {
+    // TODO
+})
+make.command("problem").description("create a problem and assign test cases manually").action(async () => {
+    // TODO
+});
+
+// TODO convert these flags to subcommands, which are already laid out above
+// code for these can be found below in the if/else chain regrading the flags
+
 program.option("-m, --manual", "create a problem and assign test cases manually").option("-s, --single", "create a single case").option("-u, --user", "create a new user").parse();
 const options = program.opts();
-
 if (options["single"]) { /* SINGLE CASE MODE */
     (async () => {
         console.log("Entering single case mode.");
@@ -144,6 +157,8 @@ if (options["single"]) { /* SINGLE CASE MODE */
         client.$disconnect();
     })();
 }
+
+// utilities
 
 /**
  * Runs the given Python file with the provied inputs and returns the resulting output
