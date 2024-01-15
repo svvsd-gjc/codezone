@@ -98,21 +98,6 @@ make.command("case").description("create a single case").action(async () => {
     // TODO
 })
 make.command("problem").description("create a problem and assign test cases manually").action(async () => {
-    // TODO
-});
-
-// TODO convert these flags to subcommands, which are already laid out above
-// code for these can be found below in the if/else chain regrading the flags
-
-program.option("-m, --manual", "create a problem and assign test cases manually").option("-s, --single", "create a single case").parse();
-const options = program.opts();
-if (options["single"]) { /* SINGLE CASE MODE */
-    (async () => {
-        console.log("Entering single case mode.");
-        let cases = await makeCaseSetPrompt();
-        console.log(JSON.stringify(cases));
-    })();
-} else if (options["manual"]) { /* MANUAL MODE */
     (async () => {
         let p = await prompt([
             {
@@ -141,7 +126,7 @@ if (options["single"]) { /* SINGLE CASE MODE */
         console.log("Create test cases:");
         let tests = await makeCaseSetPrompt();
         console.log("Creating problem...");
-        let res = await client.problem.create({
+        let res = await client.problem.create({ //TODO this pushes to the database even though the command description claims it does not
             data: {
                 name: p.name,
                 description: p.desc,
@@ -155,7 +140,20 @@ if (options["single"]) { /* SINGLE CASE MODE */
         console.log(res);
         client.$disconnect();
     })();
-}
+});
+
+// TODO convert these flags to subcommands, which are already laid out above
+// code for these can be found below in the if/else chain regrading the flags
+
+program.option("-s, --single", "create a single case").parse();
+const options = program.opts();
+if (options["single"]) { /* SINGLE CASE MODE */
+    (async () => {
+        console.log("Entering single case mode.");
+        let cases = await makeCaseSetPrompt();
+        console.log(JSON.stringify(cases));
+    })();
+} 
 
 // utilities
 
