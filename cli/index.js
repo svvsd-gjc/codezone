@@ -17,14 +17,14 @@ add.command("file <file>").description("add a problem to the database from a pro
     // *test and example inputs follow the format, where a comma seperates cases, and a pipe seperates inputs: a|b|c,a|b|c
     //
     // #**
-    // #name <name> 
+    // #name <name>
     // #desc <description>
     // #points <points>
     // #difficulty <difficulty>
     // #examples <example inputs>
     // #tests <test inputs>
     // #**
-    // 
+    //
 
     // parse file and header
     let file_content = await fs.readFile(file, "utf-8");
@@ -76,8 +76,23 @@ add.command("file <file>").description("add a problem to the database from a pro
     }
 })
 add.command("user <name> <password> <team>").description("add a user to the database").action(async (name, password, team) => {
-    // TODO
+    (async () => {
+        /* let p = await prompt([
+            { type: "text", name: "name", message: "Username" }, { type: "text", name: "password", message: "Password" }, { type: "number", name: "team", message: "Team number" }
+        ]); */
+        console.log("Adding user...");
+        let pass = sha256(password).toString();
+        await client.user.create({
+            data: {
+                name: name,
+                password: pass,
+                team: parseInt(team), //TODO is this a smart way of doing this?
+            }
+        });
+        console.log("Done!");
+    })();
 });
+
 let make = program.command("make").description("create data for manual/testing use via prompts, does NOT add to database");
 make.command("case").description("create a single case").action(async () => {
     // TODO
@@ -89,29 +104,13 @@ make.command("problem").description("create a problem and assign test cases manu
 // TODO convert these flags to subcommands, which are already laid out above
 // code for these can be found below in the if/else chain regrading the flags
 
-program.option("-m, --manual", "create a problem and assign test cases manually").option("-s, --single", "create a single case").option("-u, --user", "create a new user").parse();
+program.option("-m, --manual", "create a problem and assign test cases manually").option("-s, --single", "create a single case").parse();
 const options = program.opts();
 if (options["single"]) { /* SINGLE CASE MODE */
     (async () => {
         console.log("Entering single case mode.");
         let cases = await makeCaseSetPrompt();
         console.log(JSON.stringify(cases));
-    })();
-} else if (options["user"]) { /* CREATE NEW USER */
-    (async () => {
-        let p = await prompt([
-            { type: "text", name: "name", message: "Username" }, { type: "text", name: "password", message: "Password" }, { type: "number", name: "team", message: "Team number" }
-        ]);
-        console.log("Adding user...");
-        let pass = sha256(p.password).toString();
-        await client.user.create({
-            data: {
-                name: p.name,
-                password: pass,
-                team: p.team,
-            }
-        });
-        console.log("Done!");
     })();
 } else if (options["manual"]) { /* MANUAL MODE */
     (async () => {
