@@ -95,7 +95,11 @@ add.command("user <name> <password> <team>").description("add a user to the data
 
 let make = program.command("make").description("create data for manual/testing use via prompts, does NOT add to database");
 make.command("case").description("create a single case").action(async () => {
-    // TODO
+    (async () => {
+        console.log("Entering single case mode.");
+        let cases = await makeCaseSetPrompt();
+        console.log(JSON.stringify(cases));
+    })();
 })
 make.command("problem").description("create a problem and assign test cases manually").action(async () => {
     (async () => {
@@ -142,18 +146,7 @@ make.command("problem").description("create a problem and assign test cases manu
     })();
 });
 
-// TODO convert these flags to subcommands, which are already laid out above
-// code for these can be found below in the if/else chain regrading the flags
-
-program.option("-s, --single", "create a single case").parse();
-const options = program.opts();
-if (options["single"]) { /* SINGLE CASE MODE */
-    (async () => {
-        console.log("Entering single case mode.");
-        let cases = await makeCaseSetPrompt();
-        console.log(JSON.stringify(cases));
-    })();
-} 
+program.parse()
 
 // utilities
 
