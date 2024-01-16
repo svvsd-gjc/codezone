@@ -86,22 +86,13 @@ add.command("user <name> <password> <team>").description("add a user to the data
             data: {
                 name: name,
                 password: pass,
-                team: parseInt(team), //TODO is this a smart way of doing this?
+                team: parseInt(team),
             }
         });
         console.log("Done!");
     })();
 });
-
-let make = program.command("make").description("create data for manual/testing use via prompts, does NOT add to database");
-make.command("case").description("create a single case").action(async () => {
-    (async () => {
-        console.log("Entering single case mode.");
-        let cases = await makeCaseSetPrompt();
-        console.log(JSON.stringify(cases));
-    })();
-})
-make.command("problem").description("create a problem and assign test cases manually").action(async () => {
+add.command("problem").description("create a problem and assign test cases manually").action(async () => {
     (async () => {
         let p = await prompt([
             {
@@ -130,7 +121,7 @@ make.command("problem").description("create a problem and assign test cases manu
         console.log("Create test cases:");
         let tests = await makeCaseSetPrompt();
         console.log("Creating problem...");
-        let res = await client.problem.create({ //TODO this pushes to the database even though the command description claims it does not
+        let res = await client.problem.create({
             data: {
                 name: p.name,
                 description: p.desc,
@@ -145,6 +136,15 @@ make.command("problem").description("create a problem and assign test cases manu
         client.$disconnect();
     })();
 });
+
+let make = program.command("make").description("create data for manual/testing use via prompts, does NOT add to database");
+make.command("case").description("create a single case").action(async () => {
+    (async () => {
+        console.log("Entering single case mode.");
+        let cases = await makeCaseSetPrompt();
+        console.log(JSON.stringify(cases));
+    })();
+})
 
 program.parse()
 
