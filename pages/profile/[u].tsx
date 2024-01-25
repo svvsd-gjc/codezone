@@ -32,6 +32,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 
 const Profile = ({ data }: { data: any }) => (
     <div className="m-4 rounded bg-gray-200 dark:bg-gray-600">
+        {/* TODO make prettier. could also add more information, team info instead of id, etc, etc */}
         <span className="inline-block m-3 px-2 rounded text-5xl font-bold bg-blue-400">{data.name}</span>
         <span className="float-right m-3 px-2 rounded text-4xl font-bold bg-blue-300">team {data.team}</span>
         <span className="float-right m-3 px-2 rounded text-4xl font-bold bg-blue-300">{data.points} point(s)</span>

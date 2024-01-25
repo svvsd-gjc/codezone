@@ -11,6 +11,8 @@ export async function getServerSideProps({ query }: { query: any }) {
 
 const Signin = ({ err }: { err: any }) => {
 
+    // TODO merge with signup to one page, if possible
+
     const handleSignup = async (e: any) => {
         e.preventDefault();
 

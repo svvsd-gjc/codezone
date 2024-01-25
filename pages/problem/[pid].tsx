@@ -51,6 +51,7 @@ const Problem = ({ problem, id, context }: { problem: any, id: number, context: 
             </div>
             <div className="flex-1 bg-gray-100 dark:bg-gray-600 px-1">
                 {/* render all example cases so the user can see what they'll be graded for */}
+                {/* TODO differentiate between cases, because they can kinda just look like a blob */}
                 {Object.keys(example_cases).map((case_name: any, case_idx: number) =>
                     <div className="pb-6" key={case_name}>
                         <span className="font-bold text-xl">Example Case {case_idx}</span>

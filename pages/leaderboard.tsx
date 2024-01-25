@@ -55,6 +55,7 @@ function teamToTableBody(t: any[]) {
 }
 
 const Leaderboard = ({ team0, team1 }: { team0: any[], team1: any[] }) => (
+    // TODO toggle switch between teams, or side by side view, or options for either
     <>
         <h1 className="p-4 text-xl dark:text-white">Beginner</h1>
         <Table headers={["Name", "Points"]}>
