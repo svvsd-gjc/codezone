@@ -30,7 +30,13 @@ class Header {
             // in the case of examples or tests, we need to split the content,
             // first by comma, then by pipe
             if (key === "examples" || key === "tests") {
-                content = content.split(",");
+                // split by comma (each case)
+                content = content.replace(/\\,/g, '#').split(',').map(function (item) {
+                    // allows escaped commas!
+                    return item.replace(/#/g, ',');
+                });
+
+                // split by pipes (each input)
                 content = content.map((c) => c.split("|"));
             }
 
