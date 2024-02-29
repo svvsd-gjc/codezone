@@ -1,6 +1,6 @@
 import { GetServerSidePropsContext } from 'next';
 import { useSession } from 'next-auth/react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Submit from "../../components/submit";
 import { prisma } from "../../src/db";
 
@@ -31,8 +31,15 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 const Problem = ({ problem, id, context }: { problem: any, id: number, context: any }) => {
 
     const session = useSession();
-
     const example_cases = problem.example_cases;
+
+    // fetch completion status
+    const [completed, setCompleted] = useState(false);
+    useEffect(() => {
+        fetch("/api/userHasCompleted" + "?u=" + session.data?.user?.name + "&p=" + id).then(res => res.json()).then(data => {
+            setCompleted(data.completed);
+        });
+    }, [session])
 
     return (
         <>
@@ -99,6 +106,7 @@ const Problem = ({ problem, id, context }: { problem: any, id: number, context: 
                     difficulty: {problem.difficulty}
                 </span>
             </span>
+            {completed ? <span className="text-4xl px-2"><span className="rounded bg-green-500 dark:bg-green-600 px-2">complete</span></span> : <></>}
         </div>;
     }
 };
