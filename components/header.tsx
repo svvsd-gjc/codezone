@@ -11,17 +11,17 @@ function Header() {
             <div className="text-size-4 bg-gray-300 text-black hover:bg-gray-600 hover:text-white dark:bg-gray-700 transition-all p-2">
                 <span className="px-6 dark:text-white">CODE_ZONE</span>
                 {/* Buttons */}
-                <RedirectButton href="/leaderboard">leaderboard</RedirectButton>
-                <RedirectButton href="/">problems</RedirectButton>
+                <RedirectButton href="/leaderboard">Leaderboard</RedirectButton>
+                <RedirectButton href="/">Problems</RedirectButton>
                 {
                     session.status == "loading" ? <RedirectButton>loading...</RedirectButton> : null
                 }
                 {
                     session.status == "authenticated"
                         ?
-                        <RedirectButton href="/" onClick={() => signOut({ callbackUrl: "/signin" })}>logout <span className="text-white">({session.data.user?.name})</span></RedirectButton>
+                        <RedirectButton href="/" onClick={() => signOut({ callbackUrl: "/signin" })}>Log Out <span className="text-white">({session.data.user?.name})</span></RedirectButton>
                         :
-                        <RedirectButton href="/signin">login{config["allow-signups"] ? <>/signup</> : <></>}</RedirectButton>
+                        <RedirectButton href="/signin">login{config["allow-signups"] ? <>/Sign up</> : <></>}</RedirectButton>
                 }
             </div>
         </div>

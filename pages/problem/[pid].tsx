@@ -54,7 +54,7 @@ const Problem = ({ problem, id, context }: { problem: any, id: number, context: 
     function problem_dashboard() {
         return <div className="flex mb-4 pt-4 text-xl dark:text-white">
             <div className="flex-1 bg-gray-50 dark:bg-gray-700 px-1">
-                <div className="font-extrabold">description</div>
+                <div className="font-extrabold">Description</div>
                 {problem.description}
             </div>
             <div className="flex-1 bg-gray-100 dark:bg-gray-600 px-1">
@@ -63,15 +63,15 @@ const Problem = ({ problem, id, context }: { problem: any, id: number, context: 
                 {Object.keys(example_cases).map((case_name: any, case_idx: number) =>
                     <div className="pb-6" key={case_name}>
                         <span className="font-bold text-xl">Example Case {case_idx}</span>
-                        <div className="font-extrabold">inputs</div>
+                        <div className="font-extrabold">⇒ Inputs</div>
                         {example_cases[case_name].inputs.map((_in: any, index: number) => (<span key={index} className="dark:text-gray-300">{example_cases[case_name].inputs[index]}<br /></span>))}
-                        <div className="font-extrabold">outputs</div>
+                        <div className="font-extrabold">⇐ Outputs</div>
                         {example_cases[case_name].outputs.map((_out: any, index: number) => (<span key={index} className="dark:text-gray-300">{example_cases[case_name].outputs[index]}<br /></span>))}
                     </div>
                 )}
             </div>
             <div className="flex-1 bg-gray-50 dark:bg-gray-700 px-1">
-                <div className="font-extrabold">submit</div>
+                <div className="font-extrabold">Submit</div>
                 {/* fancy multer form data thingy, no idea how it works i got this off stack overflow */}
                 {session.status != "loading" ?
                     <form className="py-2" action={"/api/upload?p=" + id + "&u=" + session.data?.user?.name} method="post" encType="multipart/form-data">
@@ -114,10 +114,10 @@ const Problem = ({ problem, id, context }: { problem: any, id: number, context: 
             </span>
             <span className="text-4xl px-2">
                 <span className="rounded bg-blue-400 dark:bg-blue-500 px-2">
-                    points: {problem.points}
+                    Points: {problem.points}
                 </span>
             </span>
-            {completed ? <span className="text-4xl px-2"><span className="rounded bg-green-500 dark:bg-green-600 px-2">complete</span></span> : <></>}
+            {completed ? <span className="text-4xl px-2"><span className="rounded bg-green-500 dark:bg-green-600 px-2">Complete</span></span> : <></>}
         </div>;
     }
 };
