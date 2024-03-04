@@ -3,6 +3,7 @@ import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import Submit from "../../components/submit";
 import { prisma } from "../../src/db";
+import config from "../../code-comp.json";
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     const query = ctx.query;
@@ -93,17 +94,27 @@ const Problem = ({ problem, id, context }: { problem: any, id: number, context: 
         return <div className="flex-col dark:text-white">
             <span className="text-4xl px-2">
                 <span className="rounded bg-gray-200 dark:bg-gray-600 px-2">
+                    <span className="italic">
+                        ({
+                            problem.difficulty <= config['difficulty-easy'] ?
+                                <>Easy</>
+                                :
+                                problem.difficulty <= config['difficulty-medium'] ?
+                                    <>Medium</>
+                                    :
+                                    problem.difficulty <= config['difficulty-hard'] ?
+                                        <>Hard</>
+                                        :
+                                        <>Insane</>
+                        }){' '}
+                    </span>
+
                     {problem.name}
                 </span>
             </span>
             <span className="text-4xl px-2">
                 <span className="rounded bg-blue-400 dark:bg-blue-500 px-2">
                     points: {problem.points}
-                </span>
-            </span>
-            <span className="text-4xl px-2">
-                <span className="rounded bg-blue-400 dark:bg-blue-500 px-2">
-                    difficulty: {problem.difficulty}
                 </span>
             </span>
             {completed ? <span className="text-4xl px-2"><span className="rounded bg-green-500 dark:bg-green-600 px-2">complete</span></span> : <></>}
