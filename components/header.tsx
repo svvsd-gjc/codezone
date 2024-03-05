@@ -21,7 +21,7 @@ function Header() {
                         ?
                         <RedirectButton href="/" onClick={() => signOut({ callbackUrl: "/signin" })}>Log Out <span className="text-white">({session.data.user?.name})</span></RedirectButton>
                         :
-                        <RedirectButton href="/signin">login{config["allow-signups"] ? <>/Sign up</> : <></>}</RedirectButton>
+                        <RedirectButton href="/signin">Log in{config["allow-signups"] ? <>/Sign up</> : <></>}</RedirectButton>
                 }
             </div>
         </div>
