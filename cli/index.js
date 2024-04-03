@@ -242,7 +242,10 @@ async function makeCaseSetPrompt() {
 function inferType(output) {
     // if the output can be cast to a number, it's either an int or a float
     k = Number.parseFloat(output);
-    if (!Number.isNaN(k)) {
+    if (
+        !Number.isNaN(k) &&
+        !Number.isNaN(+output) // funky type coercion
+    ) {
         // if the number is an integer, it's an int. otherwise, it's a float
         if (Number.isInteger(k)) {
             return "int";
