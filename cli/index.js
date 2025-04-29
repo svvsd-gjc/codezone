@@ -5,76 +5,27 @@ const { program } = require("commander");
 const { exec } = require("child_process");
 const fs = require("fs/promises");
 const sha256 = require("crypto-js/sha256");
-const { Prisma } = require("@prisma/client");
 const { Header } = require("./header");
 const PrismaClient = require("@prisma/client").PrismaClient;
 const client = new PrismaClient();
 
 let add = program.command("add").description("add data to source database");
-add.command("file <file>").description("add a problem to the database from a problem source file").action(async (file) => {
-    // when adding files, there is a required header that will determine how the problem gets added
-    // this header is in the form of a comment, and should be formatted like this:
-    // *test and example inputs follow the format, where a comma seperates cases, and a pipe seperates inputs: a|b|c,a|b|c
-    //
-    // #**
-    // #name <name>
-    // #desc <description>
-    // #points <points>
-    // #difficulty <difficulty>
-    // #examples <example inputs>
-    // #tests <test inputs>
-    // #**
-    //
+add.command("file <file>").description("add a problem to the database from a problem source file").action(async (file) => { await addFile(file, false); });
+add.command("dir <directory>").description("add all problems in source files from the given directory. does not prompt for user input, so be careful!").action(async (directory) => {
+    // get all .py files in the directory
+    let files = await fs.readdir(directory);
+    files = files.filter((file) => file.endsWith(".py"));
 
-    // parse file and header
-    let file_content = await fs.readFile(file, "utf-8");
-    let header = new Header(file_content);
-
-    // generate cases from header
-    let gen_cases = async (inputs) => {
-        let tmp = {};
-        await Promise.all(inputs.map(async (input, i) => {
-            await runWithInputs(file, input).then(async (out) => {
-                tmp[`case${i}`] = {
-                    inputs: input,
-                    outputs: out,
-                    type: inferType(out),
-                };
-            });
-        }));
-        return tmp;
+    // for each file, add it to the database
+    let n_files = files.length;
+    let n = 1;
+    for (const file of files) {
+        console.log(`Adding ${file}... (${n}/${n_files})`);
+        await addFile(`${directory}/${file}`, true);
+        n += 1;
     }
-    header.examples = await gen_cases(header.examples);
-    header.tests = await gen_cases(header.tests);;
-
-    // confirm with user
-    console.log(JSON.stringify(header, null, 4));
-    let confirm = await prompt({
-        type: "toggle",
-        name: "confirm",
-        message: "Confirm?",
-        active: "yes",
-        inactive: "no",
-    });
-    if (!confirm.confirm) {
-        console.log("Aborting...");
-        process.exit(0);
-    } else {
-        console.log("Adding problem...");
-        client.problem.create({
-            data: {
-                name: header.name,
-                description: header.desc,
-                points: Number.parseInt(header.points),
-                difficulty: Number.parseInt(header.difficulty),
-                example_cases: header.examples,
-                test_cases: header.tests,
-            }
-        }).then((res) => {
-            client.$disconnect();
-        });
-    }
-})
+    console.log("Added all files.")
+});
 add.command("user <name> <password> <team>").description("add a user to the database").action(async (name, password, team) => {
     (async () => {
         /* let p = await prompt([
@@ -149,6 +100,79 @@ make.command("case").description("create a single case").action(async () => {
 program.parse()
 
 // utilities
+
+/**
+ * Adds the file at the given path to the database
+ * @param {string} file file path
+ * @param {boolean} silent if true, do not prompt for confirmation
+ */
+async function addFile(file, silent) {
+    // when adding files, there is a required header that will determine how the problem gets added
+    // this header is in the form of a comment, and should be formatted like this:
+    // *test and example inputs follow the format, where a comma seperates cases, and a pipe seperates inputs: a|b|c,a|b|c
+    //
+    // #**
+    // #name <name>
+    // #desc <description>
+    // #points <points>
+    // #difficulty <difficulty>
+    // #examples <example inputs>
+    // #tests <test inputs>
+    // #**
+    //
+    // parse file and header
+    let file_content = await fs.readFile(file, "utf-8");
+    let header = new Header(file_content);
+
+    // generate cases from header
+    let gen_cases = async (inputs) => {
+        let tmp = {};
+        await Promise.all(inputs.map(async (input, i) => {
+            await runWithInputs(file, input).then(async (out) => {
+                tmp[`case${i}`] = {
+                    inputs: input,
+                    outputs: out,
+                    type: inferType(out),
+                };
+            });
+        }));
+        return tmp;
+    };
+    header.examples = await gen_cases(header.examples);
+    header.tests = await gen_cases(header.tests);;
+
+    // confirm with user, if not silent
+    if (!silent) {
+        console.log(JSON.stringify(header, null, 4));
+        let confirm = await prompt({
+            type: "toggle",
+            name: "confirm",
+            message: "Confirm?",
+            active: "yes",
+            inactive: "no",
+        });
+        if (!confirm.confirm) {
+            console.log("Aborting...");
+            process.exit(0);
+        } else {
+            console.log("Adding problem...");
+        }
+    }
+
+    // create the problem in the database
+    await client.problem.create({
+        data: {
+            name: header.name,
+            description: header.desc,
+            points: Number.parseInt(header.points),
+            difficulty: Number.parseInt(header.difficulty),
+            example_cases: header.examples,
+            test_cases: header.tests,
+        }
+    }).then((res) => {
+        client.$disconnect();
+    });
+};
 
 /**
  * Runs the given Python file with the provied inputs and returns the resulting output
