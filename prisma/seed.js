@@ -19,13 +19,26 @@ const PrismaClient = require("@prisma/client").PrismaClient;
     await client.problem.create({
         data: {
             name: "Sum",
-            description: "Sum the numbers given, terminated by -1.",
+            description: "Add the two numbers together and print the result.",
             difficulty: 1,
             points: 1,
-            example_cases: `{"case0":{"inputs":["1","2","3","-1"],"outputs":["6"],"type":"int"}}`,
-            test_cases: `{"case0":{"inputs":["1","2","3","-1"],"outputs":["6"],"type":"int"}}`,
+            example_cases: {
+                case0: {
+                    inputs: ["1", "2"],
+                    outputs: ["3"],
+                    type: "int",
+                }
+            },
+            test_cases: {
+                case0: {
+                    inputs: ["1", "2"],
+                    outputs: ["3"],
+                    type: "int",
+                },
+            }
         }
-    })
+    });
+
 
     await client.$disconnect();
 })();
