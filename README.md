@@ -34,7 +34,7 @@ npx next start
 Docker, which is the reccomended solution for production environments, is documented in [this](dockerusage.md) file.
 
 ## Adding problems and users
-A CLI tool exists to add problems and users to the attached database. See [this](cli/README.md) file for more information.
+An interactive TUI tool exists to manage problems, users, and database operations. Launch it with `cd cli && node index.js`. See [this](cli/README.md) file for more information.
 
 ## Configuring CodeZone
 See ```code-comp.json```, all configurable values should be included there.
