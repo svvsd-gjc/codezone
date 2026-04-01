@@ -1,10 +1,9 @@
 {
-  "name": "cli",
-  "version": "1.1.0",
+  "name": "codezone-cli",
+  "version": "2.0.0",
   "main": "index.js",
   "license": "ISC",
   "dependencies": {
-    "commander": "^10.0.0",
-    "prompts": "^2.4"
+    "blessed": "^0.1.81"
   }
 }
