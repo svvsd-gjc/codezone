@@ -76,20 +76,6 @@ const footerBox = blessed.box({
 //  Modal Dialogs
 // ═══════════════════════════════════════════════════════════
 
-const promptBox = blessed.prompt({
-  parent: screen,
-  top: 'center',
-  left: 'center',
-  width: '60%',
-  height: 'shrink',
-  hidden: true,
-  border: { type: 'line' },
-  style: { border: { fg: 'yellow' }, fg: 'white' },
-  tags: true,
-  keys: true,
-  vi: false,
-});
-
 const questionBox = blessed.question({
   parent: screen,
   top: 'center',
@@ -239,8 +225,69 @@ function createScrollArea(opts) {
   });
 }
 
+function padColumns(headers, rows) {
+  var allRows = [headers].concat(rows);
+  var widths = headers.map(function (h, i) {
+    return allRows.reduce(function (max, row) {
+      return Math.max(max, (row[i] || '').length);
+    }, 0);
+  });
+  function formatRow(row) {
+    return row.map(function (cell, i) {
+      var s = String(cell || '');
+      return s + ' '.repeat(Math.max(0, widths[i] - s.length));
+    }).join('  ');
+  }
+  return { formatRow: formatRow, widths: widths };
+}
+
 function createTable(parent, headers, rows, opts) {
   const o = opts || {};
+
+  if (o.interactive) {
+    // Use blessed.list for interactive tables (proper selection highlight)
+    var fmt = padColumns(headers, rows);
+    var headerLine = fmt.formatRow(headers);
+    var items = rows.map(function (r) { return fmt.formatRow(r); });
+
+    var headerText = blessed.text({
+      parent: parent,
+      top: o.top != null ? o.top : 0,
+      left: (o.left != null ? o.left : 2) + 1,
+      right: (o.right != null ? o.right : 2) + 1,
+      height: 1,
+      content: headerLine,
+      style: { fg: 'cyan', bold: true },
+    });
+
+    var list = blessed.list({
+      parent: parent,
+      top: (o.top != null ? o.top : 0) + 1,
+      left: o.left != null ? o.left : 2,
+      right: o.right != null ? o.right : 2,
+      height: items.length + 2,
+      items: items,
+      border: { type: 'line' },
+      style: {
+        border: { fg: 'grey' },
+        fg: 'white',
+        selected: { bg: 'blue', fg: 'white', bold: true },
+      },
+      keys: true,
+      mouse: true,
+      interactive: true,
+      padding: { left: 0 },
+    });
+
+    // Expose selected as 1-indexed (matching listtable behavior where 0 = header)
+    Object.defineProperty(list, '_realSelected', {
+      get: function () { return list.selected; },
+    });
+
+    return list;
+  }
+
+  // Non-interactive: use listtable for static display
   const data = [headers].concat(rows);
   const tbl = blessed.listtable({
     parent: parent,
@@ -254,12 +301,11 @@ function createTable(parent, headers, rows, opts) {
       border: { fg: 'grey' },
       header: { fg: 'cyan', bold: true },
       cell: { fg: 'white' },
-      selected: o.interactive ? { bg: 'blue', fg: 'white' } : undefined,
     },
     align: 'left',
-    keys: !!o.interactive,
-    mouse: !!o.interactive,
-    interactive: !!o.interactive,
+    keys: false,
+    mouse: false,
+    interactive: false,
     pad: 1,
   });
   return tbl;
@@ -308,9 +354,49 @@ function renderCases(parent, title, cases, y) {
 
 function inputAsync(label, defaultVal) {
   return new Promise(function (resolve) {
-    promptBox.input(label, defaultVal || '', function (err, val) {
-      resolve((err || val == null) ? null : val);
+    var modal = blessed.box({
+      parent: screen,
+      top: 'center',
+      left: 'center',
+      width: '60%',
+      height: 7,
+      border: { type: 'line' },
+      style: { border: { fg: 'yellow' }, fg: 'white' },
+      tags: true,
+      label: ' Input ',
     });
+    blessed.text({
+      parent: modal,
+      top: 0,
+      left: 1,
+      content: label,
+      style: { fg: 'white' },
+      tags: true,
+    });
+    var input = blessed.textbox({
+      parent: modal,
+      top: 2,
+      left: 1,
+      right: 1,
+      height: 1,
+      inputOnFocus: true,
+      style: { fg: 'white', focus: { fg: 'white' } },
+    });
+    if (defaultVal) input.setValue(defaultVal);
+
+    input.on('submit', function (val) {
+      modal.destroy();
+      screen.render();
+      resolve(val || '');
+    });
+    input.on('cancel', function () {
+      modal.destroy();
+      screen.render();
+      resolve(null);
+    });
+
+    input.focus();
+    screen.render();
   });
 }
 
@@ -755,16 +841,15 @@ function listProblemsScreen() {
       var table = createTable(contentBox, headers, rows, { top: 1, interactive: true });
 
       table.on('select', function (el, idx) {
-        if (idx > 0) {
-          var problem = problems[idx - 1];
-          navigate(function () { return viewProblemScreen(problem); }, problem.name);
-        }
+        var problem = problems[idx];
+        if (problem) navigate(function () { return viewProblemScreen(problem); }, problem.name);
       });
 
       table.key('d', async function () {
         var selected = table.selected;
-        if (selected > 0) {
-          var problem = problems[selected - 1];
+        if (selected >= 0) {
+          var problem = problems[selected];
+          if (!problem) return;
           var yes = await confirmAsync('Delete "' + problem.name + '"?');
           if (yes) {
             try {
@@ -933,10 +1018,51 @@ function listUsersScreen() {
 
       var table = createTable(contentBox, headers, rows, { top: 1, interactive: true });
 
+      table.key('p', async function () {
+        var selected = table.selected;
+        if (selected >= 0) {
+          var user = users[selected];
+          if (!user) return;
+          var newPass = await inputAsync('New password for "' + user.name + '":');
+          if (newPass == null || newPass === '') { table.focus(); screen.render(); return; }
+          try {
+            var hashed = sha256(newPass).toString();
+            await client.user.update({ where: { id: user.id }, data: { password: hashed } });
+            await messageAsync('{green-fg}Password updated for "' + user.name + '"{/green-fg}', 2);
+          } catch (err) {
+            await messageAsync('{red-fg}Error: ' + err.message + '{/red-fg}', 2);
+          }
+          table.focus();
+          screen.render();
+        }
+      });
+
+      table.key('t', async function () {
+        var selected = table.selected;
+        if (selected >= 0) {
+          var user = users[selected];
+          if (!user) return;
+          var teamIdx = await selectAsync('New team for "' + user.name + '"', ['Beginner (0)', 'Advanced (1)']);
+          if (teamIdx == null) { table.focus(); screen.render(); return; }
+          try {
+            await client.user.update({ where: { id: user.id }, data: { team: teamIdx } });
+            await messageAsync('{green-fg}Team updated for "' + user.name + '"{/green-fg}', 2);
+            clearContent();
+            listUsersScreen();
+            return;
+          } catch (err) {
+            await messageAsync('{red-fg}Error: ' + err.message + '{/red-fg}', 2);
+          }
+          table.focus();
+          screen.render();
+        }
+      });
+
       table.key('d', async function () {
         var selected = table.selected;
-        if (selected > 0) {
-          var user = users[selected - 1];
+        if (selected >= 0) {
+          var user = users[selected];
+          if (!user) return;
           if (user.organizer) {
             await messageAsync('{yellow-fg}Cannot delete organizer accounts from here.{/yellow-fg}', 2);
             table.focus();
@@ -962,7 +1088,7 @@ function listUsersScreen() {
 
       table.key('escape', function () { goBack(); });
       table.focus();
-      setFooter('{bold}\u2191\u2193{/bold} Navigate  {bold}d{/bold} Delete  {bold}Esc{/bold} Back');
+      setFooter('{bold}\u2191\u2193{/bold} Navigate  {bold}p{/bold} Password  {bold}t{/bold} Team  {bold}d{/bold} Delete  {bold}Esc{/bold} Back');
       screen.render();
     } catch (err) {
       await messageAsync('{red-fg}Error: ' + err.message + '{/red-fg}', 3);
