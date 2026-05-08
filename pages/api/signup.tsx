@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import nc from "next-connect";
 import config from "../../code-comp.json";
 import { prisma } from "../../src/db";
+import { validateUsername, validatePassword } from "../../lib/validators";
 
 const api = nc<NextApiRequest, NextApiResponse>({
     onError: (err, req, res, next) => {
@@ -13,35 +14,21 @@ const api = nc<NextApiRequest, NextApiResponse>({
 });
 
 api.post((req, res) => {
-    // make sure signups are allowed
     if (!config["allow-signups"]) { return res.status(503).json({ statusCode: 503, message: "Signups are not allowed at this time." }); }
 
-    const sanitizedName = req.body.username.trim();
-    const sanitizedPass = req.body.password.trim();
-
-    // Check that the sanitized name fits restrictions applied by the configuration
-    if (sanitizedName.length < config["username-len-min"]) {
-        return res.status(400).json({ statusCode: 400, message: `Name must be at least ${config["username-len-min"]} characters long.` });
-    } else if (sanitizedName.length > config["username-len-max"]) {
-        return res.status(400).json({ statusCode: 400, message: `Name must be less than ${config["username-len-max"]} characters long.` });
-    } else if (sanitizedName.match(/[^a-zA-Z0-9_]/)) {
-        return res.status(400).json({ statusCode: 400, message: "Name can only contain letters, numbers, and underscores." });
+    const nameResult = validateUsername(req.body.username, config);
+    if (!nameResult.ok) {
+        return res.status(400).json({ statusCode: 400, message: nameResult.message });
+    }
+    const passResult = validatePassword(req.body.password, config);
+    if (!passResult.ok) {
+        return res.status(400).json({ statusCode: 400, message: passResult.message });
     }
 
-    // Check that the password fits restrictions applied by the configuration
-    if (sanitizedPass < config["password-len-min"]) {
-        return res.status(400).json({ statusCode: 400, message: `Password must be at least ${config["username-len-min"]} characters long.` });
-    } else if (sanitizedName > config["password-len-max"]) {
-        return res.status(400).json({ statusCode: 400, message: `Password must be less than ${config["username-len-max"]} characters long.` });
-    } else if (sanitizedName.match(/[^a-zA-Z0-9_]/)) {
-        return res.status(400).json({ statusCode: 400, message: "Password can only contain letters, numbers, and underscores." });
-    }
-
-    // Call database and request account creation
     prisma.user.create({
         data: {
-            name: sanitizedName,
-            password: sanitizedPass
+            name: nameResult.value,
+            password: passResult.value
         }
     }).then((account) => {
         res.status(200).json({ success: true, name: account.name });

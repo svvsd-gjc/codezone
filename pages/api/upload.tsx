@@ -6,6 +6,7 @@ import { unstable_getServerSession } from "next-auth/next";
 import { log, prisma } from "../../src/db";
 import codecompcfg from "../../code-comp.json";
 import { authOptions } from "./auth/[...nextauth]";
+import { compareOutputs, type CaseType } from "../../lib/grading";
 
 interface File {
     filename: string,
@@ -53,7 +54,6 @@ async function completeProblem(problem_id: string, problem_points: number, usern
 }
 
 async function checkCase(inputs: string[], outputs: string[], type: string, path: string) {
-    // execute file with python and supply each case input sequentially
     const result: string = await new Promise((resolve, _reject) => {
         const canSetUid = typeof process.getuid === "function" && process.getuid() === 0;
         const proc = exec(`python3 -I ${path}`, {
@@ -68,30 +68,7 @@ async function checkCase(inputs: string[], outputs: string[], type: string, path
         }
     });
 
-    // log and check final results
-    // if the type is a string, the entire outputs array can be joined and matched as a chunk
-    // otherwise, iterate through each line of result output, parse it, and compare it with the relevant output element
-    let res: boolean = true;
-    if (type == "str") {
-        res = (result.trim() == outputs.join("\n"));
-    } else {
-        const lines = result.trim().split("\n");
-        for (const i in lines) {
-            const ln = lines[i];
-            let lnres = false;
-            if (type == "int") {
-                lnres = parseInt(ln) === parseInt(outputs[i]);
-            } else if (type == "float") {
-                lnres = Math.abs(parseFloat(ln) - parseFloat(outputs[i])) < 8.38e-8;
-            }
-
-            if (lnres == false) {
-                res = false;
-                break;
-            }
-        }
-    }
-    return res;
+    return compareOutputs(result, outputs, type as CaseType);
 }
 
 const upload = multer({
