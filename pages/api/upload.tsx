@@ -6,7 +6,7 @@ import { unstable_getServerSession } from "next-auth/next";
 import { log, prisma } from "../../src/db";
 import codecompcfg from "../../code-comp.json";
 import { authOptions } from "./auth/[...nextauth]";
-import { compareOutputs, type CaseType } from "../../lib/grading";
+import { compareOutputs, checkCase, type CaseType } from "../../lib/grading";
 
 interface File {
     filename: string,
@@ -51,24 +51,6 @@ async function completeProblem(problem_id: string, problem_points: number, usern
             }
         }
     });
-}
-
-async function checkCase(inputs: string[], outputs: string[], type: string, path: string) {
-    const result: string = await new Promise((resolve, _reject) => {
-        const canSetUid = typeof process.getuid === "function" && process.getuid() === 0;
-        const proc = exec(`python3 -I ${path}`, {
-            timeout: 500, // 1 second
-            maxBuffer: 5 * 1024 * 1024, // 5MB
-            uid: canSetUid ? (codecompcfg["secure-uid"] ?? undefined) : undefined,
-        }, (_err, stdout, _stderr) => {
-            resolve(stdout);
-        });
-        for (const input in inputs) {
-            proc.stdin?.write(inputs[input] + "\n");
-        }
-    });
-
-    return compareOutputs(result, outputs, type as CaseType);
 }
 
 const upload = multer({

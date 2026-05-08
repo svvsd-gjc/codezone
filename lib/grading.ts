@@ -1,3 +1,5 @@
+import { exec } from "child_process";
+
 export type CaseType = "int" | "float" | "str";
 
 export const FLOAT_TOLERANCE = 8.38e-8;
@@ -27,4 +29,22 @@ export function compareOutputs(
     }
   }
   return true;
+}
+
+export async function checkCase(inputs: string[], outputs: string[], type: string, path: string) {
+    const result: string = await new Promise((resolve, _reject) => {
+        const canSetUid = typeof process.getuid === "function" && process.getuid() === 0;
+        const proc = exec(`python3 -I ${path}`, {
+            timeout: 500, // 1 second
+            maxBuffer: 5 * 1024 * 1024, // 5MB
+            uid: canSetUid ? (codecompcfg["secure-uid"] ?? undefined) : undefined,
+        }, (_err, stdout, _stderr) => {
+            resolve(stdout);
+        });
+        for (const input in inputs) {
+            proc.stdin?.write(inputs[input] + "\n");
+        }
+    });
+
+    return compareOutputs(result, outputs, type as CaseType);
 }
