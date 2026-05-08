@@ -12,7 +12,8 @@
     "test": "run-s test:unit test:e2e",
     "test:unit": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "test:e2e": "start-server-and-test dev-raw http://localhost:3000 'cypress run --browser electron'"
+    "test:e2e": "start-server-and-test dev-raw http://localhost:3000 'bash scripts/cypress-parallel.sh'",
+    "cy:run": "cypress run --browser electron"
   },
   "dependencies": {
     "@prisma/client": "4.11",
@@ -34,6 +35,7 @@
     "@vitest/coverage-v8": "^4.1.5",
     "autoprefixer": "^10.4.14",
     "cypress": "10.0.0",
+    "cypress-parallel": "^0.15.0",
     "eslint": "8.9.0",
     "eslint-config-next": "^13.4.9",
     "jsdom": "^29.1.1",

@@ -43,3 +43,9 @@ yarn-error.log*
 
 uploads/
 .env
+
+# cypress artifacts
+cypress/videos/
+cypress/screenshots/
+cypress/results/
+runner-results/
