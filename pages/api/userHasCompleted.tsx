@@ -3,8 +3,8 @@ import { prisma } from "../../src/db";
 
 export default async function UserHasCompleted(req: NextApiRequest, res: NextApiResponse) {
     // get params from url
-    let name = req.query.u as string;
-    let pid = req.query.p as string;
+    const name = req.query.u as string;
+    const pid = req.query.p as string;
 
     // bail if the parameters are incorrect
     if (!name || !pid) {
@@ -13,7 +13,7 @@ export default async function UserHasCompleted(req: NextApiRequest, res: NextApi
     }
 
     // get user model in which paramters are satisfied
-    let model = await prisma.user.findFirst({
+    const model = await prisma.user.findFirst({
         where: {
             name: name,
             solved_problems: {
@@ -23,7 +23,7 @@ export default async function UserHasCompleted(req: NextApiRequest, res: NextApi
             }
         }
     });
-    let completed = model ? true : false;
+    const completed = model ? true : false;
 
     res.status(200).json({ completed });
 }

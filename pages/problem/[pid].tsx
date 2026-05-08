@@ -40,7 +40,7 @@ const Problem = ({ problem, id, context }: { problem: any, id: number, context: 
         fetch("/api/userHasCompleted" + "?u=" + session.data?.user?.name + "&p=" + id).then(res => res.json()).then(data => {
             setCompleted(data.completed);
         });
-    }, [session])
+    }, [session]);
 
     return (
         <>
