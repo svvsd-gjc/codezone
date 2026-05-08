@@ -63,10 +63,14 @@ const Problem = ({ problem, id, context }: { problem: any, id: number, context: 
                 {Object.keys(example_cases).map((case_name: any, case_idx: number) =>
                     <div className="pb-6" key={case_name}>
                         <span className="font-bold text-xl">Example Case {case_idx}</span>
-                        <div className="font-extrabold">⇒ Inputs</div>
-                        {example_cases[case_name].inputs.map((_in: any, index: number) => (<span key={index} className="dark:text-gray-300">{example_cases[case_name].inputs[index]}<br /></span>))}
-                        <div className="font-extrabold">⇐ Outputs</div>
-                        {example_cases[case_name].outputs.map((_out: any, index: number) => (<span key={index} className="dark:text-gray-300">{example_cases[case_name].outputs[index]}<br /></span>))}
+                        <div className="font-italic border-2 m-2 p-2">
+                            <span className="font-extrabold">⇒ Inputs</span><br/>
+                            {example_cases[case_name].inputs.map((_in: any, index: number) => (<span key={index} className="dark:text-gray-300">{example_cases[case_name].inputs[index]}<br /></span>))}
+                        </div>
+                        <div className="font-italic border-2 m-2 p-2">
+                            <span className="font-extrabold">⇐ Outputs</span><br/>
+                            {example_cases[case_name].outputs.map((_out: any, index: number) => (<span key={index} className="dark:text-gray-300">{example_cases[case_name].outputs[index]}<br /></span>))}
+                        </div>
                     </div>
                 )}
             </div>
