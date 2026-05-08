@@ -74,7 +74,7 @@ const Problem = ({ problem, id, context }: { problem: any, id: number, context: 
                 <div className="font-extrabold">Submit</div>
                 {/* fancy multer form data thingy, no idea how it works i got this off stack overflow */}
                 {session.status != "loading" ?
-                    <form className="py-2" action={"/api/upload?p=" + id + "&u=" + session.data?.user?.name} method="post" encType="multipart/form-data">
+                    <form className="py-2" action={"/api/upload?p=" + id} method="post" encType="multipart/form-data">
                         <input type="file" name="uploaded_file"></input>
                         <Submit></Submit>
                         <div>

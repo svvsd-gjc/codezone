@@ -3,7 +3,7 @@ import { prisma, log } from "../../../src/db";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { NextApiHandler } from "next";
 
-const options: NextAuthOptions = {
+export const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({
             id: "credentials",
@@ -51,5 +51,5 @@ const options: NextAuthOptions = {
     }
 };
 
-const auth: NextApiHandler = (req, res) => NextAuth(req, res, options);
+const auth: NextApiHandler = (req, res) => NextAuth(req, res, authOptions);
 export default auth;

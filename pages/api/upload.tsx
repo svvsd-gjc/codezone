@@ -2,8 +2,10 @@ import { exec } from "child_process";
 import multer from "multer";
 import { NextApiRequest, NextApiResponse } from "next";
 import nc from "next-connect";
+import { unstable_getServerSession } from "next-auth/next";
 import { log, prisma } from "../../src/db";
 import codecompcfg from "../../code-comp.json";
+import { authOptions } from "./auth/[...nextauth]";
 
 interface File {
     filename: string,
@@ -53,10 +55,11 @@ async function completeProblem(problem_id: string, problem_points: number, usern
 async function checkCase(inputs: string[], outputs: string[], type: string, path: string) {
     // execute file with python and supply each case input sequentially
     const result: string = await new Promise((resolve, _reject) => {
+        const canSetUid = typeof process.getuid === "function" && process.getuid() === 0;
         const proc = exec(`python3 -I ${path}`, {
             timeout: 500, // 1 second
             maxBuffer: 5 * 1024 * 1024, // 5MB
-            uid: codecompcfg["secure-uid"] ?? undefined,
+            uid: canSetUid ? (codecompcfg["secure-uid"] ?? undefined) : undefined,
         }, (_err, stdout, _stderr) => {
             resolve(stdout);
         });
@@ -121,7 +124,15 @@ api.use(upload.single("uploaded_file"));
 api.post(async (req, res) => {
     const now = performance.now();
     const id: string = req.query.p as string;
-    const name: string = req.query.u as string;
+
+    const session = await unstable_getServerSession(req, res, authOptions);
+    const name = session?.user?.name;
+    if (!name) {
+        log.info("Unauthenticated upload attempt, aborting.");
+        res.redirect(`/problem/${id}/?ctx=unauthorized`);
+        return;
+    }
+
     const file = req.file;
 
     if (!file) {
